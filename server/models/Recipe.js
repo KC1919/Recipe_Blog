@@ -17,7 +17,7 @@ const recipeSchema = new mongoose.Schema({
         required: true
     },
     ingredients: {
-        type: String,
+        type: Array,
         required: true
     },
     steps: {
@@ -30,6 +30,11 @@ const recipeSchema = new mongoose.Schema({
     saves: {
         type: Number
     }
+});
+
+recipeSchema.index({
+    name: 'text',
+    steps: 'text'
 });
 
 const Recipe = mongoose.model('Recipe', recipeSchema);

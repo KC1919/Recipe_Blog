@@ -1,7 +1,8 @@
 const Category = require('../models/Category');
+const Recipe = require('../models/Recipe');
 
 //get homepage
-exports.homepage = async (req, res) => {
+const homepage = async (req, res) => {
 
     try {
         const limitNumber = 5;
@@ -19,7 +20,7 @@ exports.homepage = async (req, res) => {
 }
 
 //Get all categories
-exports.categories = async (req, res) => {
+const categories = async (req, res) => {
     try {
         const categories = await Category.find({}).limit(20);
         res.render('categories', {
@@ -30,33 +31,71 @@ exports.categories = async (req, res) => {
     }
 }
 
-// async function insertDummyRecipeData() {
-//     try {
-//         await Category.insertMany([{
-//                 name: 'South Indian',
-//                 image: 'dosa.jpg'
-//             },
-//             {
-//                 name: 'North Indian',
-//                 image: 'pav-bhaji.jpg'
-//             },
-//             {
-//                 name: 'Butter Chicken',
-//                 image: 'butter-chicken.jpg'
-//             },
-//             {
-//                 name: 'Continental',
-//                 image: 'rajma.jpg'
-//             },
-//             {
-//                 name: 'Punjabi',
-//                 image: 'chole.jpg'
-//             }
-//         ]);
+const getPublishRecipe = async (req, res) => {
+    res.render('publish');
+}
 
-//     } catch (error) {
-//         console.log("Error: ", error);
-//     }
-// }
+const postPublishRecipe = async (req, res) => {
+    console.log("hello");
+}
 
-// insertDummyRecipeData();
+const exploreRecipe = async (req, res) => {
+    try {
+        console.log(req.params.id);
+        const recipe = await Recipe.findById(req.params.id);
+        if (recipe !== null) {
+            res.render('recipe', {
+                'title': 'Recipi Blog - Recipi',
+                'recipe': recipe
+            });
+        }
+    } catch (error) {
+        console.log("Recipe not found, server error");
+    }
+}
+
+const exploreCategory = async (req, res) => {
+    try {
+        console.log(req.params.id);
+        const recipes = await Recipe.find({
+            'category': req.params.id
+        });
+        if (recipes !== null) {
+            res.render('categories', {
+                'title': 'Recipi Blog - Recipi',
+                'recipes': recipes
+            });
+        }
+    } catch (error) {
+        console.log("Recipe not found, server error");
+    }
+}
+
+const searchRecipe = async (req, res) => {
+    try {
+        const searchTerm = req.body.searchTerm;
+
+        const recipes = await Recipe.find({
+            $text: {
+                $search: searchTerm,
+                $diacriticSensitive: true
+            }
+        })
+        res.render('search', {
+            title: 'Food Blog - Search',
+            'recipes': recipes
+        });
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+module.exports = {
+    homepage,
+    categories,
+    getPublishRecipe,
+    postPublishRecipe,
+    exploreRecipe,
+    exploreCategory,
+    searchRecipe
+};

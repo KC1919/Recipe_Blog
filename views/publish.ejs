@@ -1,0 +1,92 @@
+<div class="px-4 py-5 my-5 text-center">
+
+    <h1 class="display-5 fw-bold">Publish Your Recipe</h1>
+
+    <div class="col-lg-6 mx-auto">
+        <p class="lead">Share your amazing recipe with thousands of cooks around the world</p>
+    </div>
+
+    <!-- <div class="align-items-center py-5 mx-5">
+        <div class="my-2">
+            <h1 class="display-5 fw-bold">Publish Recipe</h1>
+        </div>
+        <form>
+            <label for="recipe-name">Recipe Name</label>
+            <input class="form-control my-2" type="text" placeholder="Recipe Name">
+            
+            <label for="reecipe-name">Ingredients</label>
+            <input class="form-control my-2" type="text" placeholder="Ingredients">
+
+            <label for="reecipe-name">How to make?</label>
+            <textarea class="form-control my-2" cols="20" rows="20"></textarea>
+
+            <label for="category">Category</label>
+            <select class="form-control my-2" name="cars" id="cars">
+                <option value="volvo">Volvo</option>
+                <option value="saab">Saab</option>
+                <option value="mercedes">Mercedes</option>
+                <option value="audi">Audi</option>
+            </select>
+        </form>
+    </div> -->
+</div>
+
+<div class="row justify-content-center">
+    <div class="col-8">
+        <form action="/submit-recipe" enctype="multipart/form-data" method="post">
+            <div class="row g-3">
+                <div class="col-12">
+                    <label for="email">Email</label>
+                    <input type="email" id="email" name="email" class="form-control">
+                </div>
+
+                <div class="col-12">
+                    <label for="name">Recipe Name</label>
+                    <input type="text" id="name" name="name" class="form-control">
+                </div>
+
+                <div class="col-12">
+                    <label for="steps">How to make?</label>
+                    <textarea class="form-control" id="steps" name="steps" cols="30" rows="4"></textarea>
+                </div>
+
+                <div class="col-12">
+                    <label for="email">Ingredients</label>
+                    <small>Example: Ice</small>
+                    <div class="ingredientList">
+                        <div class="ingredientDiv mb-1">
+                            <input type="text" name="ingredients" class="form-control">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-12">
+                    <button type="button" class="btn btn-outline-primary" id="addIngredientBtn">
+                        + Ingredient
+                    </button>
+                </div>
+
+                <div class="col-12">
+                    <label for="category">Select Category</label>
+                    <select class="form-select form-control" name="category" id="">
+                        <option selected>Select Category</option>
+                        <option value="Thai">Thai</option>
+                        <option value="Chinese">Chinese</option>
+                        <option value="American">American</option>
+                        <option value="Mexican">Mexican</option>
+                        <option value="Indian">Indian</option>
+                    </select>
+                </div>
+
+                <div class="col-12">
+                    <label for="image">Product Image</label>
+                    <input type="file" class="form-control" name="image" id="" accept="image/">
+                </div>
+
+                <div class="col-12">
+                    <button class="btn btn-primary">Publish Recipe</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>

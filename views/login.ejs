@@ -1,1 +1,29 @@
-<h1>Login</h1>
+
+<div class="auth-main-container d-flex justify-content-around align-items-center">
+    <div class="left-container">
+        <div>
+            <h1 class="mb-3 align-items-center">Login</h1>
+        </div>
+    
+        <div class="register-form-container">
+            <form onsubmit="handleLogin(event)">
+                <input id="email" class="form-control" type="email" placeholder="Email" required>
+                <label class="my-2" for="email">Email</label>
+
+                <input id="password" class="form-control" type="password" placeholder="Password" required maxlength="15" minlength="8">
+                <label class="my-2" for="password">Password</label>
+                <br>
+                
+                <button class="my-2" class="btn btn-primary" type="submit">Login</button>
+                <a href="/auth/register"><button type="button">Register</button></a>
+            </form> 
+        </div>
+    </div>
+    
+    <div class="right-container">
+        <div class="register-image-container">
+            <h1>Recipe World</h1>
+        </div>
+    </div>
+    
+</div>

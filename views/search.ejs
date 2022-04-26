@@ -1,0 +1,16 @@
+<h1 class="pb-4">Seacrh Results</h1>
+
+<div class="row row-cols-2 row-cols-lg-6 g-2 g-lg-3 py-4">
+    <%if(recipes!=''){%>
+        <%recipes.forEach((recipe)=>{%>
+            <a href="/recipe/<%=recipe._id%>" class="cols text-center category__link">
+                <div class="category__img shadow">
+                    <img src='/img/<%=recipe.image%>' alt="card" loading="lazy">
+                </div>
+                <div class="pt-1">
+                    <%=recipe.name%>
+                </div>
+            </a>
+        <%})%>
+    <%}%>
+</div>
