@@ -32,8 +32,6 @@ async function handleRegister(e) {
     }
 }
 
-
-
 // Login Functions
 async function handleLogin(e) {
 
@@ -65,7 +63,6 @@ async function handleLogin(e) {
             setTimeout(async () => {
                 window.location.reload();
             }, 100);
-
         }
 
     } catch (error) {
@@ -83,3 +80,38 @@ addIngredientBtn.addEventListener('click', function () {
     input.value = '';
     ingredientList.appendChild(newIngredient);
 })
+
+async function handleLikeClick(e){
+    let likeIcon=e.target;
+    let likeIconText=document.getElementById('heart-icon-text-'+likeIcon.getAttribute('data-id'));
+    
+    if(likeIcon.classList.contains('bi-heart-fill')){
+        likeIcon.className+='bi bi-heart';
+
+        const recipeId=likeIcon.getAttribute('data-id');
+
+        console.log(recipeId);
+
+        
+
+    }
+
+    else{
+        likeIcon.className+='-fill';
+        console.log(likeIconText.innerHTML);
+        likeIconText.innerHTML=parseInt(likeIconText.innerText)+1;
+
+        const recipeId=likeIcon.getAttribute('data-id');
+        console.log(recipeId);
+
+        const response=await fetch('/increment-likes/',{
+            method:'POST',
+            cors:'same',
+            headers:{'Content-Type':'application/json'},
+            body:JSON.stringify({recipeId:recipeId}),
+        });
+
+        const jsonResp=await response.json();
+        console.log(jsonResp);
+    }
+}

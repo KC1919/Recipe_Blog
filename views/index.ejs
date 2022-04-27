@@ -1,4 +1,9 @@
-<div class="row flex-lg-row-reverse align-items-center g-5 py-4 mb-4">
+<div class="mt-0" style="max-width: 10rem;position:relative; left:85%;bottom:1rem;">
+    <%if(loggedInStatus===true){%>
+        <a href="/my-recipes" class="nav-link px-2 link-secondary">My Recipes</a>
+        <%}%>
+</div>
+<div class="row flex-lg-row-reverse align-items-center g-5 py-2 mb-4">
     <div class="col-12 col-lg-6">
         <img src="" alt="soon to be updated">
     </div>
@@ -12,7 +17,7 @@
         </p>
 
         <div>
-            <a href="/explore-latest" class="btn btn-primary btn-lg btn-dark px-4 me-md-2">Explore Latest</a>
+            <a href="/latest-recipes" class="btn btn-primary btn-lg btn-dark px-4 me-md-2">Explore Latest</a>
             <a href="/random-recipe" class="btn btn-outline-secondary btn-lg px-4 me-md-2">Random recipe</a>
         </div>
     </div>
@@ -22,23 +27,33 @@
         <%if(categories!=''){%>
             <%categories.forEach((category)=>{%>
                 <a href="#" class="cols text-center category__link">
+                    <div class="card" style="width: 12rem; height: 12rem;">
+                        <div class="category__img shadow">
+                            <img src='/img/<%=category.image%>' alt="card" loading="lazy">
+                        </div>
+                        <div class="card-body">
+                            <%=category.name%>
+                        </div>
+                    </div>
+                </a>
+                <!-- <a href="#" class="cols text-center category__link">
                     <div class="category__img shadow">
                         <img src='/img/<%=category.image%>' alt="card" loading="lazy">
                     </div>
                     <div class="pt-1">
                         <%=category.name%>
                     </div>
-                </a>
-            <%})%>
-        <%}%>
+                </a> -->
+                <%})%>
+                    <%}%>
 
-            <a href="/categories" class="cols text-center category__link">
-                <div class="category__img shadow">
-                    <!-- <img src="/img/food.jpg" alt="View all categories" loading="lazy"> -->
-                        View all
-                </div>
-                    <!-- <div class="pt-1">View all</div> -->
-            </a>
+                        <a href="/categories" class="cols text-center category__link">
+                            <div class="category__img shadow">
+                                <!-- <img src="/img/food.jpg" alt="View all categories" loading="lazy"> -->
+                                View all
+                            </div>
+                            <!-- <div class="pt-1">View all</div> -->
+                        </a>
     </div>
 
     <!-- Categories-end -->
@@ -47,50 +62,90 @@
     <section class="pb-4 pt-4">
         <div class="d-flex mb-2 align-items-center">
             <h2>Latest Recipes</h2>
-            <a href="/explore-latest" class="ms-auto">View More</a>
         </div>
 
-        <div class="row row-cols-2 row-cols-lg-5 g-2 g-lg-3 ">
-            <a href="/recipe/#" class="cols text-center category__link">
-                <div class="category__img category__img--large shadow">
-                    <img src="/img/pizza.jpg" alt="Pizza" loading="lazy">
-                </div>
-                <div class="pt-1">Pizza</div>
-            </a>
+        <div class="row row-cols-2 row-cols-lg-6 g-2 g-lg-3 ">
+            <%if(typeof latestRecipes!='undefined' && latestRecipes.length>0){%>
+                <%latestRecipes.forEach((recipe,index)=>{%>
+                    <div class="card mx-1" style="width: 12rem; height: 12rem;">
+                        <a href="/recipe/<%=recipe._id%>" class="cols text-center category__link">
+                            <div class="category__img shadow">
+                                <img src='/uploads/<%=recipe.image%>' alt="<%=recipe.name%>>" loading="lazy">
+                            </div>
+                            <div class="card-body">
+                                <%=recipe.name%>
+                            </div>
+                        </a>
+                        <div class="information d-flex justify-content-sm-between">
+                            <div class="heart-icon-div mb-0">
+                                <i id="heart-icon" class="bi bi-heart" data-id="<%=recipe._id%>" onclick="handleLikeClick(event)"></i>
+                                <p id="heart-icon-text-<%=recipe._id%>" class="heart-icon-text" ><%=recipe.likes%></p>
+                            </div>
 
-            <a href="/recipe/#" class="cols text-center category__link">
-                <div class="category__img category__img--large shadow">
-                    <img src="/img/pizza.jpg" alt="Pizza" loading="lazy">
-                </div>
-                <div class="pt-1">Pizza</div>
-            </a>
+                            <div>
+                                <p><%=recipe.publisher%></p>
+                            </div>
+                        </div>
+                    </div>
 
-            <a href="/recipe/#" class="cols text-center category__link">
-                <div class="category__img category__img--large shadow">
-                    <img src="/img/pizza.jpg" alt="Pizza" loading="lazy">
-                </div>
-                <div class="pt-1">Pizza</div>
-            </a>
+                <%})%>
+            <%}%>
 
-            <a href="/recipe/#" class="cols text-center category__link">
-                <div class="category__img category__img--large shadow">
-                    <img src="/img/pizza.jpg" alt="Pizza" loading="lazy">
+            <a href="/latest-recipes" class="cols text-center category__link">
+                <div class="category__img shadow">
+                    View more
                 </div>
-                <div class="pt-1">Pizza</div>
             </a>
-
-            <a href="/recipe/#" class="cols text-center category__link">
-                <div class="category__img category__img--large shadow">
-                    <img src="/img/pizza.jpg" alt="Pizza" loading="lazy">
-                </div>
-                <div class="pt-1">Pizza</div>
-            </a>
-
         </div>
 
     </section>
 
     <!-- Latest Section end -->
+
+
+    <!-- Popular Section -->
+    <section class="pb-4 pt-4">
+        <div class="d-flex mb-2 align-items-center">
+            <h2>Latest Recipes</h2>
+        </div>
+
+        <div class="row row-cols-2 row-cols-lg-6 g-2 g-lg-3 ">
+            <%if(typeof popularRecipes!='undefined' && popularRecipes.length>0){%>
+                <%popularRecipes.forEach((recipe,index)=>{%>
+                    <div class="card mx-1" style="width: 12rem; height: 12rem;">
+                        <a href="/recipe/<%=recipe._id%>" class="cols text-center category__link">
+                            <div class="category__img shadow">
+                                <img src='/uploads/<%=recipe.image%>' alt="<%=recipe.name%>>" loading="lazy">
+                            </div>
+                            <div class="card-body">
+                                <%=recipe.name%>
+                            </div>
+                        </a>
+                        <div class="information d-flex justify-content-sm-between">
+                            <div class="heart-icon-div mb-0">
+                                <i id="heart-icon" class="bi bi-heart" data-id="<%=recipe._id%>" onclick="handleLikeClick(event)"></i>
+                                <p id="heart-icon-text-<%=recipe._id%>" class="heart-icon-text" ><%=recipe.likes%></p>
+                            </div>
+
+                            <div>
+                                <p><%=recipe.publisher%></p>
+                            </div>
+                        </div>
+                    </div>
+
+                <%})%>
+            <%}%>
+
+            <a href="/popular-recipes" class="cols text-center category__link">
+                <div class="category__img shadow">
+                    View more
+                </div>
+            </a>
+        </div>
+
+    </section>
+
+    <!-- Popular Section end -->
 
     <!-- Submit Section -->
     <section class="px-4 py-5 my-5 text-center">

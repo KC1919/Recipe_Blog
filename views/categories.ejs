@@ -1,4 +1,6 @@
+
 <h1>Explore Categories</h1>
+
 <nav aria-label="breadcrumb">
     <ol class="breadcrumb">
         <li class="breadcrumb-item"><a href="/">Home</a></li>
@@ -8,7 +10,7 @@
 
 <div class="row row-cols-2 row-cols-lg-6 g-2 g-lg-3 py-4">
     <%if(typeof categories!=='undefined' && categories.length>0){%>
-        <%categories.forEach((category)=>{%>
+        <% categories.forEach((category)=>{%>
             <a href="/categories/<%=category.name%>" class="cols text-center category__link">
                 <div class="category__img shadow">
                     <img src='/img/<%=category.image%>' alt="card" loading="lazy">
@@ -18,5 +20,7 @@
                 </div>
             </a>
         <%})%>
+    <%}else{%>
+        <h4>No Categories found</h4>
     <%}%>
 </div>

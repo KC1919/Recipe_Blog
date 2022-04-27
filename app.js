@@ -20,7 +20,11 @@ app.use(session({
 }));
 
 app.use(flash());
-app.use(fileUpload());
+app.use(fileUpload({
+    limits: {
+        fileSize: 50 * 1024 * 1024
+    },
+}));
 
 app.use(express.json());
 app.use(express.urlencoded({

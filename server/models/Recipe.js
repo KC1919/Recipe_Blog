@@ -1,9 +1,13 @@
 const mongoose = require('mongoose');
 
 const recipeSchema = new mongoose.Schema({
-    user: {
+    author: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User'
+    },
+    publisher: {
+        type: String,
+        required: true
     },
     name: {
         type: String,
@@ -14,7 +18,8 @@ const recipeSchema = new mongoose.Schema({
     },
     category: {
         type: String,
-        required: true
+        required: true,
+        enum: ['Thai', 'Indian', 'American', 'Chinese', 'Mexican', 'Continental', 'South Indian', 'North Indian', 'Italian']
     },
     ingredients: {
         type: Array,
@@ -26,9 +31,11 @@ const recipeSchema = new mongoose.Schema({
     },
     likes: {
         type: Number,
+        default: 0
     },
     saves: {
-        type: Number
+        type: Number,
+        default: 0
     }
 });
 
@@ -39,4 +46,4 @@ recipeSchema.index({
 
 const Recipe = mongoose.model('Recipe', recipeSchema);
 
-module.exposrts = recipeSchema;
+module.exports = Recipe;

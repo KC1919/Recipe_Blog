@@ -1,23 +1,17 @@
 const express = require('express');
 const verifyUser = require('../middlewares/verify');
 const router = express.Router();
-const {
-    homepage,
-    categories,
-    getPublishRecipe,
-    postPublishRecipe,
-    exploreRecipe,
-    exploreCategory,
-    searchRecipe,
-} = require('../controllers/recipeController');
-const { verify } = require('jsonwebtoken');
+const recipeController = require('../controllers/recipeController');
 
-router.get('/', homepage);
-router.get('/categories', categories);
-router.get('/recipe/:id', exploreRecipe);
-router.get('/categories/:id', exploreCategory);
-router.get('/submit-recipe', verifyUser, getPublishRecipe);
-router.post('/search',searchRecipe);
-router.post('/submit-recipe',verifyUser, postPublishRecipe)
+router.get('/', recipeController.homepage);
+router.get('/categories', recipeController.categories);
+router.get('/recipe/:id', recipeController.exploreRecipe);
+router.get('/categories/:id', recipeController.exploreCategory);
+router.get('/submit-recipe', verifyUser, recipeController.getPublishRecipe);
+router.post('/search',recipeController.searchRecipe);
+router.post('/submit-recipe',verifyUser, recipeController.postPublishRecipe);
+router.get('/latest-recipes/',recipeController.latestRecipes);
+router.get('/my-recipes/',recipeController.myRecipes);
+router.post('/increment-likes',recipeController.incrementLikes);
 
 module.exports = router;

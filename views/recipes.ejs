@@ -1,0 +1,36 @@
+<h1>Explore Recipes</h1>
+
+<nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="/">Home</a></li>
+        <li class="breadcrumb-item active" aria-current="page"><a href="/latest-recipes">Recipes</a></li>
+    </ol>
+</nav>
+
+
+<div class="row row-cols-2 row-cols-lg-6 g-2 g-lg-3 ">
+    <%if(typeof recipes!='undefined' && recipes.length>0){%>
+        <%recipes.forEach((recipe,index)=>{%>
+            <div class="card mx-1" style="width: 12rem; height: 12rem;">
+                <a href="/recipe/<%=recipe._id%>" class="cols text-center category__link">
+                    <div class="category__img shadow">
+                        <img src='/uploads/<%=recipe.image%>' alt="<%=recipe.name%>>" loading="lazy">
+                    </div>
+                    <div class="card-body">
+                        <%=recipe.name%>
+                    </div>
+                </a>
+                <div class="information d-flex justify-content-sm-between">
+                    <div class="heart-icon-div mb-0">
+                        <i id="heart-icon" class="bi bi-heart" data-id="<%=recipe._id%>" onclick="handleLikeClick(event)"></i>
+                        <p id="heart-icon-text-<%=recipe._id%>" class="heart-icon-text" ><%=recipe.likes%></p>
+                    </div>
+
+                    <div>
+                        <p><%=recipe.publisher%></p>
+                    </div>
+                </div>
+            </div>
+
+        <%})%>
+    <%}%>
