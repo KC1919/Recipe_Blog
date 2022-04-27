@@ -32,6 +32,7 @@ exports.homepage = async (req, res) => {
         });
 
     } catch (error) {
+        console.log("Failed to load homepage, internal server error");
         res.status(500).send({
             message: error.message || 'Error occurred'
         });
