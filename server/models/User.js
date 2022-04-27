@@ -16,12 +16,16 @@ const userSchema = new mongoose.Schema({
     },
     image: {
         type: String,
-        default:null,
+        default: null,
     },
     social: {
         type: String,
-        default:null,
-    }
+        default: null,
+    },
+    saved: {
+        type: String,
+        default: null
+    },
 });
 
 const User = mongoose.model('User', userSchema);

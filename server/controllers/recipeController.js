@@ -18,9 +18,15 @@ exports.homepage = async (req, res) => {
         }).limit(5);
 
         let loggedInStatus = false;
+        let myRecipes = null;
 
         if (typeof req.cookies['secret'] !== 'undefined') {
             loggedInStatus = true;
+            myRecipes = await Recipe.find({
+                user: req.user
+            }).sort({
+                _id: -1
+            }).lean();
         }
 
         res.render('index', {
@@ -28,7 +34,8 @@ exports.homepage = async (req, res) => {
             'categories': categories,
             'latestRecipes': latestRecipes,
             'loggedInStatus': loggedInStatus,
-            'popularRecipes':popularRecipes,
+            'popularRecipes': popularRecipes,
+            'myRecipes': myRecipes
         });
 
     } catch (error) {
@@ -65,7 +72,7 @@ exports.postPublishRecipe = async (req, res) => {
         if (!req.files || Object.keys(req.files).length === 0) {
             return res.status(400).send('No files were uploaded.');
         }
-
+        
         // The name of the input field (i.e. "sampleFile") is used to retrieve the uploaded file
         imageUploadFile = req.files.image;
 
@@ -187,11 +194,11 @@ exports.myRecipes = async (req, res) => {
         }).lean();
 
         if (recipes !== null && recipes.length > 0) {
-            res.render('recipes', {
+            res.render('myrecipes', {
                 'recipes': recipes
             });
         } else {
-            res.render('recipes', {
+            res.render('myrecipes', {
                 'recipes': []
             });
         }
@@ -208,19 +215,32 @@ exports.myRecipes = async (req, res) => {
 exports.incrementLikes = async (req, res) => {
     try {
         // console.log(req.body.recipeId);
-        const recipeId=req.body.recipeId;
+        const recipeId = req.body.recipeId;
 
-        Recipe.findByIdAndUpdate(recipeId,{ $inc : { "likes" : 1 } },(err)=>{
-            if(err){
+        Recipe.findByIdAndUpdate(recipeId, {
+            $inc: {
+                "likes": 1
+            }
+        }, (err) => {
+            if (err) {
                 console.log("Failed to update likes");
-                res.status(500).json({message:"Failed to update likes",status:'failure'});
-            }else{
-                res.status(200).json({message:"Likes updated successfully",status:'success'});
+                res.status(500).json({
+                    message: "Failed to update likes",
+                    status: 'failure'
+                });
+            } else {
+                res.status(200).json({
+                    message: "Likes updated successfully",
+                    status: 'success'
+                });
             }
         });
-        
+
     } catch (error) {
         console.log(error);
-        res.status(500).json({message:"Failed to update likes",status:'failure'});
+        res.status(500).json({
+            message: "Failed to update likes",
+            status: 'failure'
+        });
     }
 }

@@ -1,0 +1,47 @@
+<div class="d-flex justify-content-around align-items-center px-4 py-3 my-3 text-center">
+
+    <div class="py-2 align-items-center">
+        <h1 class="display-5 fw-bold">My Profile</h1>
+    </div>
+    <div class="py-2 align-items-center">
+        <img src="/uploads/<%=user.image%>" alt="<%=user.image%>" height="130" width="130">
+    </div>
+</div>
+
+<div class="row justify-content-center">
+    <div class="col-8">
+        <form action="/auth/update-profile" enctype="multipart/form-data" method="post">
+            <div class="row g-3">
+
+                <div class="col-12">
+                    <label for="name">Name</label>
+                    <input type="text" id="name" name="name" value="<%=user.name%>" class="form-control" required>
+                </div>
+
+                <div class="col-12">
+                    <label for="email">Email</label>
+                    <input type="email" id="email" name="email" value="<%=user.email%>" class="form-control">
+                </div>
+
+                <div class="col-12">
+                    <label for="password">Password</label>
+                    <input type="password" id="password" name="password" value="123456789" class="form-control">
+                </div>
+
+                <div class="col-12">
+                    <label for="image">Instagram Id</label>
+                    <input type="text" class="form-control" name="social" value="<%=user.social%>" id="insta">
+                </div>
+
+                <div class="col-12">
+                    <label for="image">Profile Picture</label>
+                    <input type="file" class="form-control" name="image" id="image" accept="image/" value="<%=user.image%>">
+                </div>
+
+                <div class="col-12">
+                    <button type="submit" class="btn btn-primary">Update Profile</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>

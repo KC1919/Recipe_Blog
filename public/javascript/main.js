@@ -91,9 +91,6 @@ async function handleLikeClick(e){
         const recipeId=likeIcon.getAttribute('data-id');
 
         console.log(recipeId);
-
-        
-
     }
 
     else{
