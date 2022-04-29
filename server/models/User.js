@@ -26,6 +26,10 @@ const userSchema = new mongoose.Schema({
         type: String,
         default: null
     },
+    liked: {
+        type: Array,
+        defualt: null
+    }
 });
 
 const User = mongoose.model('User', userSchema);

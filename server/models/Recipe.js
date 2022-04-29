@@ -15,12 +15,25 @@ const recipeSchema = new mongoose.Schema({
     },
     image: {
         type: String,
+        required: true
     },
     category: {
         type: String,
         required: true,
         enum: ['Thai', 'Indian', 'American', 'Chinese', 'Mexican', 'Continental', 'South Indian', 'North Indian', 'Italian']
     },
+    type: {
+        type: String,
+        required: true,
+        enum: ['Dinner', 'Breakfast', 'Lunch', 'Snack', 'Beverage', 'Fast Food', 'Dessert']
+    },
+
+    diet: {
+        type: String,
+        required: true,
+        enum: ['Veg', 'Non Veg']
+    },
+
     ingredients: {
         type: Array,
         required: true
@@ -41,7 +54,10 @@ const recipeSchema = new mongoose.Schema({
 
 recipeSchema.index({
     name: 'text',
-    steps: 'text'
+    steps: 'text',
+    category: 'text',
+    type: 'text',
+    diet: 'text'
 });
 
 const Recipe = mongoose.model('Recipe', recipeSchema);

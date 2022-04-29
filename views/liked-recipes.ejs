@@ -1,16 +1,16 @@
-<h1>My Recipes</h1>
+<h1>Liked Recipes</h1>
 
 <nav aria-label="breadcrumb">
     <ol class="breadcrumb">
         <li class="breadcrumb-item"><a href="/">Home</a></li>
-        <li class="breadcrumb-item active" aria-current="page"><a href="/my-recipes">My Recipes</a></li>
+        <li class="breadcrumb-item active" aria-current="page"><a href="/liked-recipes">Liked Recipes</a></li>
     </ol>
 </nav>
 
 
 <div class="row row-cols-2 row-cols-lg-6 g-2 g-lg-3 ">
-    <%if(typeof myRecipes!='undefined' && myRecipes.length>0){%>
-        <%myRecipes.forEach((recipe,index)=>{%>
+    <%if(typeof likedRecipes!='undefined' && likedRecipes.length>0){%>
+        <%likedRecipes.forEach((recipe,index)=>{%>
             <div class="card mx-1" style="width: 12rem; height: 12rem;">
                 <div class="align-items-center mb-2" style="text-align: right;">
                     <img src="/img/unsave.png" alt="bookmark-icon" height="16" width="16">

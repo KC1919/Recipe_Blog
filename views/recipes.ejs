@@ -12,6 +12,9 @@
     <%if(typeof recipes!='undefined' && recipes.length>0){%>
         <%recipes.forEach((recipe,index)=>{%>
             <div class="card mx-1" style="width: 12rem; height: 12rem;">
+                <div class="align-items-center mb-2" style="text-align: right;">
+                    <img src="/img/unsave.png" alt="bookmark-icon" height="16" width="16">
+                </div>
                 <a href="/recipe/<%=recipe._id%>" class="cols text-center category__link">
                     <div class="category__img shadow">
                         <img src='/uploads/<%=recipe.image%>' alt="<%=recipe.name%>>" loading="lazy">

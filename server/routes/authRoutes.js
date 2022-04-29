@@ -23,4 +23,6 @@ router.post('/update-profile', verifyUser, authController.updateProfile);
 
 router.get('/profile/:id', verifyUser, authController.getProfile)
 
+router.get('/logout', verifyUser, authController.logout);
+
 module.exports = router;

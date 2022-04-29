@@ -86,11 +86,23 @@ async function handleLikeClick(e){
     let likeIconText=document.getElementById('heart-icon-text-'+likeIcon.getAttribute('data-id'));
     
     if(likeIcon.classList.contains('bi-heart-fill')){
+        likeIcon.className='';
         likeIcon.className+='bi bi-heart';
 
-        const recipeId=likeIcon.getAttribute('data-id');
+        likeIconText.innerHTML=parseInt(likeIconText.innerText)-1;
 
+        const recipeId=likeIcon.getAttribute('data-id');
         console.log(recipeId);
+
+        const response=await fetch('/decrement-likes/',{
+            method:'POST',
+            cors:'same',
+            headers:{'Content-Type':'application/json'},
+            body:JSON.stringify({recipeId:recipeId}),
+        });
+
+        const jsonResp=await response.json();
+        console.log(jsonResp);
     }
 
     else{

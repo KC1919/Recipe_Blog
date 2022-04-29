@@ -3,6 +3,7 @@ const jwt = require('jsonwebtoken');
 const Recipe = require('../models/Recipe');
 const bcrypt = require('bcrypt');
 const path = require('path');
+const verify = require('../middlewares/verify');
 
 exports.getLogin = (req, res) => {
     try {
@@ -41,11 +42,11 @@ exports.postLogin = async (req, res) => {
                 }, process.env.SECRET_KEY);
 
                 //embediing jwt token inside the cookie
-                res.cookie('secret', token, {
+                await res.cookie('secret', token, {
                     expires: new Date(Date.now() + 900000),
                     httpOnly: true
                 });
-
+                
                 res.status(200).json({
                     message: 'Logged in successfully',
                     status: 'success'
@@ -116,14 +117,19 @@ exports.updateProfile = async (req, res) => {
         const name = req.body.name;
         const password = req.body.password;
         const email = req.body.email;
-        const social = 'www.instagram.com/' + req.body.social;
+        const social = req.body.social;
         let image = null;
+
+        // const user = await User.findById(req.user);
 
         if (req.files && Object.keys(req.files).length !== 0) {
             let profileImageFile = req.files.image;
             let profileImageName = Date.now() + " " + profileImageFile.name;
-            image = profileImageName;
             let profileImagePath = path.resolve('./') + '/public/uploads/' + profileImageName;
+
+            await User.findByIdAndUpdate(req.user, {
+                'image': profileImageName
+            })
 
             profileImageFile.mv(profileImagePath, (err) => {
                 if (err) {
@@ -139,7 +145,6 @@ exports.updateProfile = async (req, res) => {
             'email': email,
             'social': social,
             'password': password,
-            'image': image
         })
 
         res.status(200).json({
@@ -169,5 +174,22 @@ exports.getProfile = async (req, res) => {
         });
     } catch (error) {
 
+    }
+}
+
+exports.logout = async (req, res) => {
+    try {
+        res.clearCookie("secret");
+        // res.end();
+        res.redirect("/auth/login");
+
+    } catch (error) {
+
+        console.log("Logout failed", error);
+        res.status(500).jason({
+            message: "Failed to logout user, server error",
+            status: "failure",
+            error: error
+        });
     }
 }
