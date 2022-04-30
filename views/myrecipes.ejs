@@ -13,7 +13,7 @@
         <%myRecipes.forEach((recipe,index)=>{%>
             <div class="card mx-1" style="width: 12rem; height: 12rem;">
                 <div class="align-items-center mb-2" style="text-align: right;">
-                    <img src="/img/unsave.png" alt="bookmark-icon" height="16" width="16">
+                    <i class="bi bi-bookmarks" data-id="<%=recipe._id%>" onclick="handleSaveClick(event)"></i>
                 </div>
                 <a href="/recipe/<%=recipe._id%>" class="cols text-center category__link">
                     <div class="category__img shadow">
@@ -25,8 +25,9 @@
                 </a>
                 <div class="information d-flex justify-content-sm-between">
                     <div class="heart-icon-div mb-0">
-                        <i id="heart-icon" class="bi bi-heart" data-id="<%=recipe._id%>" onclick="handleLikeClick(event)"></i>
-                        <p id="heart-icon-text-<%=recipe._id%>" class="heart-icon-text" ><%=recipe.likes%></p>
+                        <i class="bi bi-heart" data-id="<%=recipe._id%>" onclick="handleLikeClick(event)">
+                            <p class="heart-icon-text" ><%=recipe.likes%></p>
+                        </i>
                     </div>
 
                     <div>

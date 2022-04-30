@@ -1,18 +1,24 @@
+<script>
+    let loggedIn = '<%= loggedInStatus %>' 
+</script>
+
 <div class="mt-0 text-center align-items-center" style="max-width: 10rem;position:relative; left:85%;bottom:1rem;">
     <%if(loggedInStatus===true){%>
-        <div class="d-flex justify-content-around text-center align-items-center" >
-            <div class="text-center align-items-center" onmouseover="this.style.transform='scale(1.1)'; this.style.cursor='pointer'" onmouseout="this.style.transform='scale(1.0)'">
+        <div class="d-flex justify-content-around text-center align-items-center">
+            <div class="text-center align-items-center"
+                onmouseover="this.style.transform='scale(1.1)'; this.style.cursor='pointer'"
+                onmouseout="this.style.transform='scale(1.0)'">
                 <a href="/auth/profile-setting/"><img src="/img/user.png" alt="user" height="32px" width="32px"></a>
             </div>
             <div class="text-center align-items-center">
                 <a href="/auth/logout"><button class="btn btn-primary">Logout</button></a>
             </div>
         </div>
-    <%}else{%>
-        <div class="text-center align-items-center">
-            <a href="/auth/login"><button class="btn btn-primary">Login</button></a>
-        </div>
-    <%}%>
+        <%}else{%>
+            <div class="text-center align-items-center">
+                <a href="/auth/login"><button class="btn btn-primary">Login</button></a>
+            </div>
+            <%}%>
 </div>
 <div class="row flex-lg-row-reverse align-items-center g-5 py-2 mb-4">
     <div class="col-12 col-lg-6">
@@ -47,15 +53,15 @@
                         </div>
                     </div>
                 </a>
-                
-            <%})%>
-        <%}%>
 
-        <a href="/categories" class="cols text-center category__link">
-            <div class="category__img shadow">
-                View all
-            </div>             
-        </a>
+                <%})%>
+                    <%}%>
+
+                        <a href="/categories" class="cols text-center category__link">
+                            <div class="category__img shadow">
+                                View all
+                            </div>
+                        </a>
     </div>
     <!-- Categories-end -->
 
@@ -66,13 +72,14 @@
             <div class="d-flex mb-2 align-items-center">
                 <h2>My Recipes</h2>
             </div>
-        
+
             <div class="row row-cols-2 row-cols-lg-6 g-2 g-lg-3 ">
                 <%if(myRecipes!==null && typeof myRecipes!='undefined' && myRecipes.length>0){%>
                     <%myRecipes.forEach((recipe,index)=>{%>
                         <div class="card mx-1" style="width: 12rem; height: 12rem;">
-                            <div class="align-items-center mb-2" style="text-align: right;">
-                                <img src="/img/unsave.png" alt="bookmark-icon" height="16" width="16">
+                            <div class="icon-save align-items-center mb-2">
+                                <i class="bi bi-bookmarks" data-id="<%=recipe._id%>"
+                                    onclick="handleSaveClick(event)" ></i>
                             </div>
                             <a href="/recipe/<%=recipe._id%>" class="cols text-center category__link">
                                 <div class="category__img shadow">
@@ -83,194 +90,299 @@
                                 </div>
                             </a>
                             <div class="information d-flex justify-content-sm-between">
-                                <div class="heart-icon-div mb-0">
-                                    <i id="heart-icon" class="bi bi-heart" data-id="<%=recipe._id%>" onclick="handleLikeClick(event)"></i>
-                                    <p id="heart-icon-text-<%=recipe._id%>" class="heart-icon-text" ><%=recipe.likes%></p>
+                                <div class="icon-heart heart-icon-div mb-0">
+                                    <i class="bi bi-heart" data-id="<%=recipe._id%>" onclick="handleLikeClick(event)">
+                                        <p class="heart-icon-text">
+                                            <%=recipe.likes%>
+                                        </p>
+                                    </i>
                                 </div>
-        
+
                                 <div>
-                                    <a href="/auth/profile/<%=recipe.author%>"><p><%=recipe.publisher%></p></a>
+                                    <a href="/auth/profile/<%=recipe.author%>">
+                                        <p>
+                                            <%=recipe.publisher%>
+                                        </p>
+                                    </a>
                                 </div>
                             </div>
                         </div>
-        
-                    <%})%>
-                    <a href="/my-recipes" class="cols text-center category__link">
-                        <div class="category__img shadow">
-                            View more
-                        </div>
-                    </a>
-                <%}else{%>
-                    <div style="min-width: fit-content;">
-                        <h5 class="lead">You haven't published any recipes yet!</h5>
-                    </div>
-                <%}%>
-            </div>
-        
-        </section>
-    <%}%>
 
-    <!-- My recipes section end -->
-
-    <!-- Liked Recipes Section -->
-
-    <%if(loggedInStatus===true){%>
-        <section class="pb-4 pt-4">
-            <div class="d-flex mb-2 align-items-center">
-                <h2>Liked Recipes</h2>
-            </div>
-        
-            <div class="row row-cols-2 row-cols-lg-6 g-2 g-lg-3 ">
-                <%if(likedRecipes!==null && typeof likedRecipes!='undefined' && likedRecipes.length>0){%>
-                    <%likedRecipes.forEach((recipe,index)=>{%>
-                        <div class="card mx-1" style="width: 12rem; height: 12rem;">
-                            <div class="align-items-center mb-2" style="text-align: right;">
-                                <img src="/img/unsave.png" alt="bookmark-icon" height="16" width="16">
-                            </div>
-                            <a href="/recipe/<%=recipe._id%>" class="cols text-center category__link">
+                        <%})%>
+                            <a href="/my-recipes" class="cols text-center category__link">
                                 <div class="category__img shadow">
-                                    <img src='/uploads/<%=recipe.image%>' alt="<%=recipe.name%>>" loading="lazy">
-                                </div>
-                                <div class="card-body">
-                                    <%=recipe.name%>
+                                    View more
                                 </div>
                             </a>
-                            <div class="information d-flex justify-content-sm-between">
-                                <div class="heart-icon-div mb-0">
-                                    <i id="heart-icon" class="bi bi-heart" data-id="<%=recipe._id%>" onclick="handleLikeClick(event)"></i>
-                                    <p id="heart-icon-text-<%=recipe._id%>" class="heart-icon-text" ><%=recipe.likes%></p>
+                            <%}else{%>
+                                <div style="min-width: fit-content;">
+                                    <h5 class="lead">You haven't published any recipes yet!</h5>
                                 </div>
-        
-                                <div>
-                                    <a href="/auth/profile/<%=recipe.author%>"><p><%=recipe.publisher%></p></a>
-                                </div>
-                            </div>
-                        </div>
-        
-                    <%})%>
-                    <a href="/liked-recipes" class="cols text-center category__link">
-                        <div class="category__img shadow">
-                            View more
-                        </div>
-                    </a>
-                <%}else{%>
-                    <div style="min-width: fit-content;">
-                        <h5 class="lead">You haven't published any recipes yet!</h5>
-                    </div>
-                <%}%>
+                                <%}%>
             </div>
-        
+
         </section>
-    <%}%>
+        <%}%>
 
-    <!-- Liked Recipes Section End -->
+            <!-- My recipes section end -->
 
-    <!-- Latest Section -->
-    <section class="pb-4 pt-4">
-        <div class="d-flex mb-2 align-items-center">
-            <h2>Latest Recipes</h2>
-        </div>
+            <!-- Liked Recipes Section -->
 
-        <div class="row row-cols-2 row-cols-lg-6 g-2 g-lg-3 ">
-            <%if(typeof latestRecipes!='undefined' && latestRecipes.length>0){%>
-                <%latestRecipes.forEach((recipe,index)=>{%>
-                    <div class="card mx-1" style="width: 12rem; height: 12rem;">
-                        <div class="align-items-center mb-2" style="text-align: right;">
-                            <img src="/img/unsave.png" alt="bookmark-icon" height="16" width="16">
-                        </div>
-                        <a href="/recipe/<%=recipe._id%>" class="cols text-center category__link">
-                            <div class="category__img shadow">
-                                <img src='/uploads/<%=recipe.image%>' alt="<%=recipe.name%>>" loading="lazy">
-                            </div>
-                            <div class="card-body">
-                                <%=recipe.name%>
-                            </div>
-                        </a>
-                        <div class="information d-flex justify-content-sm-between">
-                            <div class="heart-icon-div mb-0">
-                                <i id="heart-icon" class="bi bi-heart" data-id="<%=recipe._id%>" onclick="handleLikeClick(event)"></i>
-                                <p id="heart-icon-text-<%=recipe._id%>" class="heart-icon-text" ><%=recipe.likes%></p>
-                            </div>
-
-                            <div>
-                                <a href="/auth/profile/<%=recipe.author%>"><p><%=recipe.publisher%></p></a>
-                            </div>
-                        </div>
+            <%if(loggedInStatus===true){%>
+                <section class="pb-4 pt-4">
+                    <div class="d-flex mb-2 align-items-center">
+                        <h2>Liked Recipes</h2>
                     </div>
 
-                <%})%>
-            <%}%>
+                    <div class="row row-cols-2 row-cols-lg-6 g-2 g-lg-3 ">
+                        <%if(likedRecipes!==null && typeof likedRecipes!='undefined' && likedRecipes.length>0){%>
+                            <%likedRecipes.forEach((recipe,index)=>{%>
+                                <div class="card mx-1" style="width: 12rem; height: 12rem;">
+                                    <div class="icon-save align-items-center mb-2" style="text-align: right;">
+                                        <i class="bi bi-bookmarks" data-id="<%=recipe._id%>"
+                                            onclick="handleSaveClick(event)"></i>
+                                    </div>
+                                    <a href="/recipe/<%=recipe._id%>" class="cols text-center category__link">
+                                        <div class="category__img shadow">
+                                            <img src='/uploads/<%=recipe.image%>' alt="<%=recipe.name%>>"
+                                                loading="lazy">
+                                        </div>
+                                        <div class="card-body">
+                                            <%=recipe.name%>
+                                        </div>
+                                    </a>
+                                    <div class="information d-flex justify-content-sm-between">
+                                        <div class="icon-heart heart-icon-div mb-0">
+                                            <i class="bi bi-heart-fill" data-id="<%=recipe._id%>"
+                                                onclick="handleLikeClick(event)">
+                                                <p class="heart-icon-text">
+                                                    <%=recipe.likes%>
+                                                </p>
+                                            </i>
+                                        </div>
 
-            <a href="/latest-recipes" class="cols text-center category__link">
-                <div class="category__img shadow">
-                    View more
-                </div>
-            </a>
-        </div>
+                                        <div>
+                                            <a href="/auth/profile/<%=recipe.author%>">
+                                                <p>
+                                                    <%=recipe.publisher%>
+                                                </p>
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
 
-    </section>
-
-    <!-- Latest Section end -->
-
-
-    <!-- Popular Section -->
-    <section class="pb-4 pt-4">
-        <div class="d-flex mb-2 align-items-center">
-            <h2>Popular Recipes</h2>
-        </div>
-
-        <div class="row row-cols-2 row-cols-lg-6 g-2 g-lg-3 ">
-            <%if(typeof popularRecipes!='undefined' && popularRecipes.length>0){%>
-                <%popularRecipes.forEach((recipe,index)=>{%>
-                    <div class="card mx-1" style="width: 12rem; height: 12rem;">
-                        <div class="align-items-center mb-2" style="text-align: right;">
-                            <img src="/img/unsave.png" alt="bookmark-icon" height="16" width="16">
-                        </div>
-                        <a href="/recipe/<%=recipe._id%>" class="cols text-center category__link">
-                            <div class="category__img shadow">
-                                <img src='/uploads/<%=recipe.image%>' alt="<%=recipe.name%>>" loading="lazy">
-                            </div>
-                            <div class="card-body">
-                                <%=recipe.name%>
-                            </div>
-                        </a>
-                        <div class="information d-flex justify-content-sm-between">
-                            <div class="heart-icon-div mb-0">
-                                <i id="heart-icon" class="bi bi-heart" data-id="<%=recipe._id%>" onclick="handleLikeClick(event)"></i>
-                                <p id="heart-icon-text-<%=recipe._id%>" class="heart-icon-text" ><%=recipe.likes%></p>
-                            </div>
-
-                            <div>
-                                <a href="/auth/profile/<%=recipe.author%>"><p><%=recipe.publisher%></p></a>
-                            </div>
-                        </div>
+                                <%})%>
+                                    <a href="/liked-recipes" class="cols text-center category__link">
+                                        <div class="category__img shadow">
+                                            View more
+                                        </div>
+                                    </a>
+                                    <%}else{%>
+                                        <div style="min-width: fit-content;">
+                                            <h5 class="lead">You haven't published any recipes yet!</h5>
+                                        </div>
+                                        <%}%>
                     </div>
 
-                <%})%>
-            <%}%>
+                </section>
+                <%}%>
 
-            <a href="/popular-recipes" class="cols text-center category__link">
-                <div class="category__img shadow">
-                    View more
-                </div>
-            </a>
-        </div>
+                    <!-- Liked Recipes Section End -->
 
-    </section>
+                    <!-- Saved Recipes Section -->
 
-    <!-- Popular Section end -->
+                    <%if(loggedInStatus===true){%>
+                        <section class="pb-4 pt-4">
+                            <div class="d-flex mb-2 align-items-center">
+                                <h2>Saved Recipes</h2>
+                            </div>
 
-    <!-- Submit Section -->
-    <section class="px-4 py-5 my-5 text-center">
-        <img src="/" class="d-block mx-auto mb-4 img-fluid" alt="Publish your recipe for free today" width="550"
-            height="200" loading="lazy">
-        <h1 class="display-5 fw-bold">Publish your recipe for free today</h1>
-        <div class="col-lg-6 mx-auto">
-            <p class="lead mb-4">Publish your recipe in front of thousand of people for free</p>
-            <div class="d-grid gap-2 d-sm-flex justify-content-sm-center">
-                <a href="/submit-recipe" class="btn btn-primary btn-dark btn-lg">Publish Recipe</a>
-            </div>
-        </div>
-    </section>
-    <!-- Submit Section End -->
+                            <div class="row row-cols-2 row-cols-lg-6 g-2 g-lg-3 ">
+                                <%if(savedRecipes!==null && typeof savedRecipes!='undefined' && savedRecipes.length>
+                                    0){%>
+                                    <%savedRecipes.forEach((recipe,index)=>{%>
+                                        <div class="card mx-1" style="width: 12rem; height: 12rem;">
+                                            <div class="icon-save align-items-center mb-2" style="text-align: right;">
+                                                <i class="bi bi-bookmarks-fill" data-id="<%=recipe._id%>"
+                                                    onclick="handleSaveClick(event)"></i>
+                                            </div>
+                                            <a href="/recipe/<%=recipe._id%>" class="cols text-center category__link">
+                                                <div class="category__img shadow">
+                                                    <img src='/uploads/<%=recipe.image%>' alt="<%=recipe.name%>>"
+                                                        loading="lazy">
+                                                </div>
+                                                <div class="card-body">
+                                                    <%=recipe.name%>
+                                                </div>
+                                            </a>
+                                            <div class="information d-flex justify-content-sm-between">
+                                                <div class="icon-heart heart-icon-div mb-0">
+                                                    <i class="bi bi-heart" data-id="<%=recipe._id%>"
+                                                        onclick="handleLikeClick(event)">
+                                                        <p class="heart-icon-text">
+                                                            <%=recipe.likes%>
+                                                        </p>
+                                                    </i>
+                                                </div>
+
+                                                <div>
+                                                    <a href="javascript:void(0);">
+                                                        <p onclick="handleAuthorClick(event)"
+                                                            data-id="<%=recipe.author%>">
+                                                            <%=recipe.publisher%>
+                                                        </p>
+                                                    </a>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <%})%>
+                                            <a href="/saved-recipes" class="cols text-center category__link">
+                                                <div class="category__img shadow">
+                                                    View more
+                                                </div>
+                                            </a>
+                                            <%}else{%>
+                                                <div style="min-width: fit-content;">
+                                                    <h5 class="lead">You haven't published any recipes yet!</h5>
+                                                </div>
+                                                <%}%>
+                            </div>
+
+                        </section>
+                        <%}%>
+
+                            <!-- Saved Recipes Section End -->
+
+                            <!-- Latest Section -->
+                            <section class="pb-4 pt-4">
+                                <div class="d-flex mb-2 align-items-center">
+                                    <h2>Latest Recipes</h2>
+                                </div>
+
+                                <div class="row row-cols-2 row-cols-lg-6 g-2 g-lg-3 ">
+                                    <%if(typeof latestRecipes!='undefined' && latestRecipes.length>0){%>
+                                        <%latestRecipes.forEach((recipe,index)=>{%>
+                                            <div class="card mx-1" style="width: 12rem; height: 12rem;">
+                                                <div class="icon-save align-items-center mb-2" style="text-align: right;">
+                                                    <i class="bi bi-bookmarks" data-id="<%=recipe._id%>"
+                                                        onclick="handleSaveClick(event)"></i>
+                                                </div>
+                                                <a href="/recipe/<%=recipe._id%>"
+                                                    class="cols text-center category__link">
+                                                    <div class="category__img shadow">
+                                                        <img src='/uploads/<%=recipe.image%>' alt="<%=recipe.name%>>"
+                                                            loading="lazy">
+                                                    </div>
+                                                    <div class="card-body">
+                                                        <%=recipe.name%>
+                                                    </div>
+                                                </a>
+                                                <div class="information d-flex justify-content-sm-between">
+                                                    <div class="icon-heart heart-icon-div mb-0">
+                                                        <i class="bi bi-heart" data-id="<%=recipe._id%>"
+                                                            onclick="handleLikeClick(event)">
+                                                            <p class="heart-icon-text">
+                                                                <%=recipe.likes%>
+                                                            </p>
+                                                        </i>
+                                                    </div>
+
+                                                    <div>
+                                                        <a href="/auth/profile/<%=recipe.author%>">
+                                                            <p>
+                                                                <%=recipe.publisher%>
+                                                            </p>
+                                                        </a>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <%})%>
+                                                <%}%>
+
+                                                    <a href="/latest-recipes" class="cols text-center category__link">
+                                                        <div class="category__img shadow">
+                                                            View more
+                                                        </div>
+                                                    </a>
+                                </div>
+
+                            </section>
+
+                            <!-- Latest Section end -->
+
+
+                            <!-- Popular Section -->
+                            <section class="pb-4 pt-4">
+                                <div class="d-flex mb-2 align-items-center">
+                                    <h2>Popular Recipes</h2>
+                                </div>
+
+                                <div class="row row-cols-2 row-cols-lg-6 g-2 g-lg-3 ">
+                                    <%if(typeof popularRecipes!='undefined' && popularRecipes.length>0){%>
+                                        <%popularRecipes.forEach((recipe,index)=>{%>
+                                            <div class="card mx-1" style="width: 12rem; height: 12rem;">
+                                                <div class="icon-save align-items-center mb-2" style="text-align: right;">
+                                                    <i class="bi bi-bookmarks" data-id="<%=recipe._id%>"
+                                                        onclick="handleSaveClick(event)"></i>
+                                                </div>
+                                                <a href="/recipe/<%=recipe._id%>"
+                                                    class="cols text-center category__link">
+                                                    <div class="category__img shadow">
+                                                        <img src='/uploads/<%=recipe.image%>' alt="<%=recipe.name%>>"
+                                                            loading="lazy">
+                                                    </div>
+                                                    <div class="card-body">
+                                                        <%=recipe.name%>
+                                                    </div>
+                                                </a>
+                                                <div class="information d-flex justify-content-sm-between">
+                                                    <div class="icon-heart heart-icon-div mb-0">
+                                                        <i class="bi bi-heart" data-id="<%=recipe._id%>"
+                                                            onclick="handleLikeClick(event)">
+                                                            <p class="heart-icon-text">
+                                                                <%=recipe.likes%>
+                                                            </p>
+                                                        </i>
+                                                    </div>
+
+                                                    <div>
+                                                        <a href="/auth/profile/<%=recipe.author%>">
+                                                            <p>
+                                                                <%=recipe.publisher%>
+                                                            </p>
+                                                        </a>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <%})%>
+                                                <%}%>
+
+                                                    <a href="/popular-recipes" class="cols text-center category__link">
+                                                        <div class="category__img shadow">
+                                                            View more
+                                                        </div>
+                                                    </a>
+                                </div>
+
+                            </section>
+
+                            <!-- Popular Section end -->
+
+                            <!-- Submit Section -->
+                            <section class="px-4 py-5 my-5 text-center">
+                                <img src="/" class="d-block mx-auto mb-4 img-fluid"
+                                    alt="Publish your recipe for free today" width="550" height="200" loading="lazy">
+                                <h1 class="display-5 fw-bold">Publish your recipe for free today</h1>
+                                <div class="col-lg-6 mx-auto">
+                                    <p class="lead mb-4">Publish your recipe in front of thousand of people for free</p>
+                                    <div class="d-grid gap-2 d-sm-flex justify-content-sm-center">
+                                        <a href="/submit-recipe" class="btn btn-primary btn-dark btn-lg">Publish
+                                            Recipe</a>
+                                    </div>
+                                </div>
+                            </section>
+                            <!-- Submit Section End -->
 </div>

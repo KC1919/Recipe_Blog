@@ -1,17 +1,20 @@
-<h1><%=user.name%></h1>
+<h1>Saved Recipes</h1>
 
 <nav aria-label="breadcrumb">
     <ol class="breadcrumb">
         <li class="breadcrumb-item"><a href="/">Home</a></li>
-        <li class="breadcrumb-item active" aria-current="page"><a href="javascript:void(0);"><%=user.name%></a></li>
+        <li class="breadcrumb-item active" aria-current="page"><a href="/saved-recipes">Saved Recipes</a></li>
     </ol>
 </nav>
 
 
 <div class="row row-cols-2 row-cols-lg-6 g-2 g-lg-3 ">
-    <%if(typeof recipes!='undefined' && recipes.length>0){%>
-        <%recipes.forEach((recipe,index)=>{%>
-            <div class="card mx-1" style="width: 12rem; height: 12rem;">
+    <%if(typeof savedRecipes!='undefined' && savedRecipes.length>0){%>
+        <%savedRecipes.forEach((recipe,index)=>{%>
+            <div class="card mx-1" style="width: 12rem; height:12rem">
+                <div class="align-items-center mb-2" style="text-align: right;">
+                    <i class="bi bi-bookmarks-fill" data-id="<%=recipe._id%>" onclick="handleSaveClick(event)"></i>
+                </div>
                 <a href="/recipe/<%=recipe._id%>" class="cols text-center category__link">
                     <div class="category__img shadow">
                         <img src='/uploads/<%=recipe.image%>' alt="<%=recipe.name%>>" loading="lazy">
@@ -22,8 +25,9 @@
                 </a>
                 <div class="information d-flex justify-content-sm-between">
                     <div class="heart-icon-div mb-0">
-                        <i id="heart-icon" class="bi bi-heart" data-id="<%=recipe._id%>" onclick="handleLikeClick(event)"></i>
-                        <p id="heart-icon-text-<%=recipe._id%>" class="heart-icon-text" ><%=recipe.likes%></p>
+                        <i class="bi bi-heart-fill" data-id="<%=recipe._id%>" onclick="handleLikeClick(event)">
+                            <p class="heart-icon-text" ><%=recipe.likes%></p>
+                        </i>
                     </div>
 
                     <div>
@@ -34,4 +38,3 @@
 
         <%})%>
     <%}%>
-</div>

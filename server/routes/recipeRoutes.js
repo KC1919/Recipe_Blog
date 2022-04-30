@@ -14,7 +14,11 @@ router.get('/latest-recipes/', recipeController.latestRecipes);
 router.get('/popular-recipes/', recipeController.popularRecipes);
 router.get('/liked-recipes/', verifyUser, recipeController.likedRecipes);
 router.get('/my-recipes/', verifyUser, recipeController.myRecipes);
-router.post('/increment-likes', recipeController.incrementLikes);
-router.post('/decrement-likes', recipeController.decrementLikes);
+router.get('/saved-recipes/', verifyUser, recipeController.savedRecipes);
+router.post('/increment-likes', verifyUser, recipeController.incrementLikes);
+router.post('/decrement-likes', verifyUser, recipeController.decrementLikes);
+router.post('/save-recipe',verifyUser, recipeController.saveRecipe);
+router.post('/unsave-recipe', verifyUser, recipeController.unsaveRecipe);
+
 
 module.exports = router;

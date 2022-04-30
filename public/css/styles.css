@@ -70,6 +70,15 @@ a{
     display: inline-block;
 }
 
-#heart-icon-div:hover{
-    transform: scale(1.1);
+.icon-save{
+    text-align: right; 
+    max-width: fit-content;
+    position: relative;
+    left:90%
 }
+
+.icon-save:hover, .icon-heart:hover{
+    transform: scale(1.2);
+    cursor: pointer;
+}
+

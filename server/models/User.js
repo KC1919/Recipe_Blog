@@ -23,7 +23,7 @@ const userSchema = new mongoose.Schema({
         default: null,
     },
     saved: {
-        type: String,
+        type: Array,
         default: null
     },
     liked: {

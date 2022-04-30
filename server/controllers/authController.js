@@ -46,7 +46,7 @@ exports.postLogin = async (req, res) => {
                     expires: new Date(Date.now() + 900000),
                     httpOnly: true
                 });
-                
+
                 res.status(200).json({
                     message: 'Logged in successfully',
                     status: 'success'
@@ -99,7 +99,6 @@ exports.postRegister = async (req, res) => {
 
 exports.getProfileSetting = async (req, res) => {
     try {
-
         const user = await User.findById(req.user);
         // console.log(req.user);
         // console.log(user);
@@ -107,7 +106,11 @@ exports.getProfileSetting = async (req, res) => {
             'user': user
         });
     } catch (error) {
-
+        console.log(error);
+        res.status(500).json({
+            message: "Error fetching profile settings, server error",
+            status: "failure"
+        })
     }
 
 }
@@ -165,15 +168,42 @@ exports.updateProfile = async (req, res) => {
 
 exports.getProfile = async (req, res) => {
     try {
-        const myRecipes = await Recipe.find({
-            user: req.params.id
+        const userId = req.params.id;
+
+        console.log(userId);
+
+        const recipes = await Recipe.find({
+            author: userId
         }).lean();
 
-        res.render('profile', {
-            'myRecipes': myRecipes
-        });
-    } catch (error) {
+        // console.log(recipes);
 
+        const user = await User.findById(userId);
+
+        // console.log(user);
+
+        const userInfo = {
+            'username': user.name,
+            'social': user.social,
+            'contact': user.email
+        }
+
+        if (recipes !== null && user !== null) {
+            console.log(userInfo);
+            res.render('profile', {
+                'recipes': recipes,
+                'user': user
+            });
+        } else {
+            console.log("Failed to fetch profile");
+        }
+
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({
+            message: "Failed to fetch user profile",
+            status: 'failure'
+        });
     }
 }
 

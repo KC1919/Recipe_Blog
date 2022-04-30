@@ -26,6 +26,7 @@ exports.homepage = async (req, res) => {
         let loggedInStatus = false;
         let myRecipes = null;
         let likedRecipes = null;
+        let savedRecipes = null
 
         if (typeof req.cookies['secret'] !== 'undefined') {
 
@@ -58,6 +59,21 @@ exports.homepage = async (req, res) => {
                     $in: likedRecipesId
                 }
             });
+
+            let savedRecipesId = await User.findById(req.user, {
+                saved: 1,
+                _id: 0
+            }).lean();
+
+            //getting the array of saved recipe ids from the object
+            savedRecipesId = savedRecipesId['saved'];
+
+            //fetching all the recipes with the ids present in the savedRecipesId array
+            savedRecipes = await Recipe.find({
+                '_id': {
+                    $in: savedRecipesId
+                }
+            });
         }
 
         res.render('index', {
@@ -67,7 +83,8 @@ exports.homepage = async (req, res) => {
             'loggedInStatus': loggedInStatus,
             'popularRecipes': popularRecipes,
             'myRecipes': myRecipes,
-            'likedRecipes': likedRecipes
+            'likedRecipes': likedRecipes,
+            'savedRecipes': savedRecipes
         });
 
     } catch (error) {
@@ -308,6 +325,35 @@ exports.myRecipes = async (req, res) => {
     }
 }
 
+exports.savedRecipes = async (req, res) => {
+    try {
+        //getting all the recipe ids liked by the user
+        let savedRecipesId = await User.findById(req.user, {
+            saved: 1,
+            _id: 0
+        }).lean();
+
+        //getting the array of liked recipe ids from the object
+        savedRecipesId = savedRecipesId['saved'];
+
+        //fetching all the recipes with the ids present in the likedRecipesId array
+        let savedRecipes = await Recipe.find({
+            '_id': {
+                $in: savedRecipesId
+            }
+        });
+
+        res.render('saved-recipes', {
+            'savedRecipes': savedRecipes
+        })
+    } catch (error) {
+        console.log("Error occured ", error);
+        res.status(500).json({
+            message: "Error fetching saved recipes, server error",
+            status: 'failure'
+        });
+    }
+}
 
 exports.incrementLikes = async (req, res) => {
     try {
@@ -320,23 +366,16 @@ exports.incrementLikes = async (req, res) => {
             }
         })
         let updateUserLikedRecipes = null;
-        if (typeof req.cookies['secret'] !== 'undefined') {
 
-            const token = req.cookies['secret'];
-            const payload = jwt.verify(token, process.env.SECRET_KEY);
-            if (payload !== null) {
-                req.user = payload.userId;
+        // console.log(req.user);
+        console.log(recipeId);
+
+        recipeId = mongoose.Types.ObjectId(recipeId);
+        updateUserLikedRecipes = await User.findByIdAndUpdate(req.user, {
+            $push: {
+                liked: recipeId
             }
-            // console.log(req.user);
-            console.log(recipeId);
-
-            recipeId = mongoose.Types.ObjectId(recipeId);
-            updateUserLikedRecipes = await User.findByIdAndUpdate(req.user, {
-                $push: {
-                    liked: recipeId
-                }
-            });
-        }
+        });
 
         // console.log(updateLike);
         // console.log(updateUserLikedRecipes);
@@ -359,27 +398,33 @@ exports.incrementLikes = async (req, res) => {
 
 exports.decrementLikes = async (req, res) => {
     try {
-        // console.log(req.body.recipeId);
-        const recipeId = req.body.recipeId;
+        let recipeId = req.body.recipeId;
 
-        Recipe.findByIdAndUpdate(recipeId, {
+        const updateLike = await Recipe.findByIdAndUpdate(recipeId, {
             $inc: {
                 "likes": -1
             }
-        }, (err) => {
-            if (err) {
-                console.log("Failed to update likes");
-                res.status(500).json({
-                    message: "Failed to update likes",
-                    status: 'failure'
-                });
-            } else {
-                res.status(200).json({
-                    message: "Likes updated successfully",
-                    status: 'success'
-                });
+        })
+        let updateUserLikedRecipes = null;
+
+        console.log(recipeId);
+
+        recipeId = mongoose.Types.ObjectId(recipeId);
+        updateUserLikedRecipes = await User.findByIdAndUpdate(req.user, {
+            $pull: {
+                liked: recipeId
             }
         });
+
+        // console.log(updateLike);
+        // console.log(updateUserLikedRecipes);
+
+        if (typeof updateLike !== 'undefined' && typeof updateUserLikedRecipes !== 'undefined') {
+            res.status(200).json({
+                message: "Likes updated successfully",
+                status: 'success'
+            });
+        }
 
     } catch (error) {
         console.log(error);
@@ -390,18 +435,80 @@ exports.decrementLikes = async (req, res) => {
     }
 }
 
-exports.save = async (req, res) => {
+exports.saveRecipe = async (req, res) => {
     try {
+        let recipeId = req.body.recipeId;
 
+        console.log(recipeId);
+
+        let recipeObjectId = mongoose.Types.ObjectId(recipeId);
+
+        console.log(recipeObjectId);
+
+        const findRecipe = await User.findById(req.user, {
+            'saved': {
+                $elemMatch: {
+                    $eq: recipeObjectId
+                }
+            },
+            '_id': 0
+        });
+
+        // console.log(findRecipe.saved.length);
+
+        if (findRecipe.saved.length === 0) {
+            const addRecipeUser = await User.findByIdAndUpdate(req.user, {
+                $push: {
+                    saved: recipeObjectId
+                }
+            });
+
+            if (addRecipeUser !== null) {
+                res.status(201).json({
+                    message: "Recipe added to the saved list successfully!",
+                    status: 'success'
+                });
+            }
+        } else {
+            console.log('Recipe already in the saved list');
+            res.status(200).json({
+                message: 'Recipe already present in the saved list',
+                status: 'failure'
+            })
+        }
     } catch (error) {
-
+        console.log(error);
+        res.status(500).json({
+            message: "Failed to save recipe",
+            status: 'failure'
+        });
     }
 }
 
-exports.unsave = async (req, res) => {
+exports.unsaveRecipe = async (req, res) => {
     try {
+        let recipeId = req.body.recipeId;
+
+        let recipeObjectId = mongoose.Types.ObjectId(recipeId);
+        const removeRecipeUser = await User.findByIdAndUpdate(req.user, {
+            $pull: {
+                saved: recipeObjectId
+            }
+        });
+
+        if (removeRecipeUser !== null) {
+            res.status(201).json({
+                message: "Recipe added to the saved list successfully!",
+                status: 'success'
+            });
+        }
+
 
     } catch (error) {
-
+        console.log(error);
+        res.status(500).json({
+            message: "Failed to unsave recipe",
+            status: 'failure'
+        });
     }
 }
