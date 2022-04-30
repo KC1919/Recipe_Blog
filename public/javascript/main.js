@@ -81,11 +81,6 @@ async function addIngredient(e) {
         inputs[i].value = '';
     }
 
-    // let inputs = newIngredientDiv.getElementsByTagName('input');
-    // console.log(inputs);
-    // // inputs.forEach((input=>{
-    // //     input.value='';
-    // // }))
     ingredientList.appendChild(newIngredientDiv);
 
 }
