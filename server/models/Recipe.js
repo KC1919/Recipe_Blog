@@ -31,11 +31,25 @@ const recipeSchema = new mongoose.Schema({
     diet: {
         type: String,
         required: true,
-        enum: ['Veg', 'Non Veg']
+        enum: ['Veg', 'NonVeg']
     },
 
     ingredients: {
-        type: Array,
+        type: [{
+            'name': {
+                type: String,
+                required: true
+            },
+            'quantity': {
+                type: String,
+                required: true
+            },
+            'unit': {
+                type: String,
+                required: true,
+                enum: ['tbsp', 'grams', 'kilograms', 'liter', 'milliliter','unit']
+            }
+        }],
         required: true
     },
     steps: {

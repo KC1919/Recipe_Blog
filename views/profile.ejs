@@ -1,4 +1,11 @@
-<h1><%=user.name%></h1>
+<div class="py-2 mb-2 align-items-center" >
+    <h1 style="display: inline-block;"><%=user.name%></h1>
+    <%if(user.email!==null){%>
+        <p class="lead" style="display: inline-block;"><small>( <%=user.email!==null?'email: '+user.email:''%>
+            <%=user.social!==null?', instagram: '+user.social:''%>
+        )</small></p>
+    <%}%>
+</div>
 
 <nav aria-label="breadcrumb">
     <ol class="breadcrumb">

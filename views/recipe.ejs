@@ -10,7 +10,8 @@
 
     <div class="row">
         <div class="col-12 col-md-4">
-            <img src="/uploads/<%=recipe.image%>" class="img-fluid sticky-top" alt="" style="top:20px;" loading="lazy">
+            <img src="/uploads/<%=recipe.image%>" class="img-fluid sticky-top" alt="" style="top: 20px"
+                loading="lazy" />
         </div>
 
         <div class="col-12 col-md-8">
@@ -22,36 +23,52 @@
                 </div>
 
                 <div class="col-12">
-                    <p>
-                        Published By: <%=recipe.publisher%>
-                    </p>
+                    <p>Published By: <%=recipe.publisher%></p>
                 </div>
 
                 <div class="col-12 mb-4">
-                    <i class="bi bi-tag"></i> 
-                    <%=recipe.category%>
+                    <i class="bi bi-tag"></i>
+                    <a href="/categories/<%=recipe.category%>"><%=recipe.category%></a>
                 </div>
 
-                <div class="col-12" style="white-space: pre-line;">
-                    <h4>Cooking Instructions</h4>
-                    <%=recipe.steps%>
+                <div class="col-12" style="white-space:normal">
+                    <h4 class="my-2 py-1">Cooking Instructions</h4>
+                    <p class="lead py-1 my-2" style="word-spacing: 3.5px;">
+                        <small><%=recipe.steps%></small>
+                    </p>
                 </div>
             </div>
 
             <div class="row pt-4">
                 <div class="col-12">
                     <h4>Ingredients</h4>
-                    <ul class="list-group list-group-flush">
+                    <table style="table-layout: fixed; width: 100%">
+                        <th>
+                            <tr>
+                                <td class="text-left">Name</td>
+                                <td class="text-left">Quantity</td>
+                                <td class="text-left">Unit</td>
+                            </tr>
+                        </th>
+
                         <%recipe.ingredients.forEach((ingredient,index)=>{%>
-                            <li class="list-group-item">
-                                <%=ingredient%>
-                            </li>
+                            <tr>
+                                <td class="text-left lead"><small>
+                                        <%=ingredient.name%>
+                                    </small></td>
+                                <td class="text-left lead"><small>
+                                        <%=ingredient.quantity%>
+                                    </small></td>
+                                <td class="text-left lead"><small>
+                                        <%=ingredient.unit%>
+                                    </small></td>
+                            </tr>
                             <%})%>
-                    </ul>
+                    </table>
                 </div>
             </div>
         </div>
     </div>
     <%}else{%>
         <p>No item found</p>
-    <%}%>
+        <%}%>

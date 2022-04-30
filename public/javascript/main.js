@@ -70,16 +70,25 @@ async function handleLogin(e) {
     }
 }
 
-let addIngredientBtn = document.getElementById('addIngredientBtn');
-let ingredientList = document.querySelector('.ingredientList');
-let ingredientDiv = document.querySelectorAll('.ingredientDiv')[0];
+async function addIngredient(e) {
+    let ingredientList = document.querySelector('.ingredientList');
+    let ingredientDiv = document.querySelectorAll('.ingredientDiv')[0];
+    let newIngredientDiv = ingredientDiv.cloneNode(true);
 
-addIngredientBtn.addEventListener('click', function () {
-    let newIngredient = ingredientDiv.cloneNode(true);
-    let input = newIngredient.getElementsByTagName('input')[0];
-    input.value = '';
-    ingredientList.appendChild(newIngredient);
-})
+    let inputs = newIngredientDiv.querySelectorAll('input');
+
+    for (let i = 0; i < inputs.length; i++) {
+        inputs[i].value = '';
+    }
+
+    // let inputs = newIngredientDiv.getElementsByTagName('input');
+    // console.log(inputs);
+    // // inputs.forEach((input=>{
+    // //     input.value='';
+    // // }))
+    ingredientList.appendChild(newIngredientDiv);
+
+}
 
 async function handleLikeClick(e) {
     try {
@@ -207,7 +216,7 @@ async function handleAuthorClick(e) {
         // console.log(e.target);
         console.log("before");
 
-        window.location.assign('/auth/profile/'+authorId)
+        window.location.assign('/auth/profile/' + authorId)
         // const response = await fetch(`/auth/profile/${authorId}`, {
         //     method: 'GET',
         //     cors: 'same',

@@ -43,7 +43,7 @@
     <div class="row row-cols-2 row-cols-lg-6 g-2 g-lg-3 py-4">
         <%if(categories!=''){%>
             <%categories.forEach((category)=>{%>
-                <a href="#" class="cols text-center category__link">
+                <a href="/categories/<%=category.name%>" class="cols text-center category__link">
                     <div class="card" style="width: 12rem; height: 12rem;">
                         <div class="category__img shadow">
                             <img src='/img/<%=category.image%>' alt="card" loading="lazy">
@@ -68,13 +68,13 @@
     <!-- My Recipes Section -->
 
     <%if(loggedInStatus===true){%>
+        <%if(myRecipes!==null && typeof myRecipes!='undefined' && myRecipes.length>0){%>
         <section class="pb-4 pt-4">
             <div class="d-flex mb-2 align-items-center">
                 <h2>My Recipes</h2>
             </div>
 
             <div class="row row-cols-2 row-cols-lg-6 g-2 g-lg-3 ">
-                <%if(myRecipes!==null && typeof myRecipes!='undefined' && myRecipes.length>0){%>
                     <%myRecipes.forEach((recipe,index)=>{%>
                         <div class="card mx-1" style="width: 12rem; height: 12rem;">
                             <div class="icon-save align-items-center mb-2">
@@ -114,14 +114,10 @@
                                     View more
                                 </div>
                             </a>
-                            <%}else{%>
-                                <div style="min-width: fit-content;">
-                                    <h5 class="lead">You haven't published any recipes yet!</h5>
-                                </div>
-                                <%}%>
+            
             </div>
-
         </section>
+        <%}%>
         <%}%>
 
             <!-- My recipes section end -->
@@ -129,13 +125,13 @@
             <!-- Liked Recipes Section -->
 
             <%if(loggedInStatus===true){%>
+                <%if(likedRecipes!==null && typeof likedRecipes!='undefined' && likedRecipes.length>0){%>
                 <section class="pb-4 pt-4">
                     <div class="d-flex mb-2 align-items-center">
                         <h2>Liked Recipes</h2>
                     </div>
 
                     <div class="row row-cols-2 row-cols-lg-6 g-2 g-lg-3 ">
-                        <%if(likedRecipes!==null && typeof likedRecipes!='undefined' && likedRecipes.length>0){%>
                             <%likedRecipes.forEach((recipe,index)=>{%>
                                 <div class="card mx-1" style="width: 12rem; height: 12rem;">
                                     <div class="icon-save align-items-center mb-2" style="text-align: right;">
@@ -177,14 +173,11 @@
                                             View more
                                         </div>
                                     </a>
-                                    <%}else{%>
-                                        <div style="min-width: fit-content;">
-                                            <h5 class="lead">You haven't published any recipes yet!</h5>
-                                        </div>
-                                        <%}%>
+                                    
                     </div>
 
                 </section>
+                <%}%>
                 <%}%>
 
                     <!-- Liked Recipes Section End -->
@@ -192,14 +185,13 @@
                     <!-- Saved Recipes Section -->
 
                     <%if(loggedInStatus===true){%>
+                        <%if(savedRecipes!==null && typeof savedRecipes!='undefined' && savedRecipes.length>0){%>
                         <section class="pb-4 pt-4">
                             <div class="d-flex mb-2 align-items-center">
                                 <h2>Saved Recipes</h2>
                             </div>
 
                             <div class="row row-cols-2 row-cols-lg-6 g-2 g-lg-3 ">
-                                <%if(savedRecipes!==null && typeof savedRecipes!='undefined' && savedRecipes.length>
-                                    0){%>
                                     <%savedRecipes.forEach((recipe,index)=>{%>
                                         <div class="card mx-1" style="width: 12rem; height: 12rem;">
                                             <div class="icon-save align-items-center mb-2" style="text-align: right;">
@@ -242,26 +234,23 @@
                                                     View more
                                                 </div>
                                             </a>
-                                            <%}else{%>
-                                                <div style="min-width: fit-content;">
-                                                    <h5 class="lead">You haven't published any recipes yet!</h5>
-                                                </div>
-                                                <%}%>
+                                            
                             </div>
 
                         </section>
+                        <%}%>
                         <%}%>
 
                             <!-- Saved Recipes Section End -->
 
                             <!-- Latest Section -->
+                            <%if(typeof latestRecipes!='undefined' && latestRecipes!==null && latestRecipes.length>0){%>
                             <section class="pb-4 pt-4">
                                 <div class="d-flex mb-2 align-items-center">
                                     <h2>Latest Recipes</h2>
                                 </div>
 
                                 <div class="row row-cols-2 row-cols-lg-6 g-2 g-lg-3 ">
-                                    <%if(typeof latestRecipes!='undefined' && latestRecipes.length>0){%>
                                         <%latestRecipes.forEach((recipe,index)=>{%>
                                             <div class="card mx-1" style="width: 12rem; height: 12rem;">
                                                 <div class="icon-save align-items-center mb-2" style="text-align: right;">
@@ -299,7 +288,7 @@
                                             </div>
 
                                             <%})%>
-                                                <%}%>
+                                                
 
                                                     <a href="/latest-recipes" class="cols text-center category__link">
                                                         <div class="category__img shadow">
@@ -309,18 +298,19 @@
                                 </div>
 
                             </section>
-
+                            <%}%>
                             <!-- Latest Section end -->
 
 
                             <!-- Popular Section -->
+                            <%if(typeof popularRecipes!='undefined' && popularRecipes!==null && popularRecipes.length>0){%>
                             <section class="pb-4 pt-4">
                                 <div class="d-flex mb-2 align-items-center">
                                     <h2>Popular Recipes</h2>
                                 </div>
 
                                 <div class="row row-cols-2 row-cols-lg-6 g-2 g-lg-3 ">
-                                    <%if(typeof popularRecipes!='undefined' && popularRecipes.length>0){%>
+                                    
                                         <%popularRecipes.forEach((recipe,index)=>{%>
                                             <div class="card mx-1" style="width: 12rem; height: 12rem;">
                                                 <div class="icon-save align-items-center mb-2" style="text-align: right;">
@@ -358,7 +348,7 @@
                                             </div>
 
                                             <%})%>
-                                                <%}%>
+                                                
 
                                                     <a href="/popular-recipes" class="cols text-center category__link">
                                                         <div class="category__img shadow">
@@ -368,6 +358,7 @@
                                 </div>
 
                             </section>
+                            <%}%>
 
                             <!-- Popular Section end -->
 

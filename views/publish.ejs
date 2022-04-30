@@ -45,14 +45,33 @@
                     <label for="email">Ingredients</label>
                     <small>Example: Ice</small>
                     <div class="ingredientList">
-                        <div class="ingredientDiv mb-1">
-                            <input type="text" name="ingredients" class="form-control" required>
+                        <div class="d-flex justify-content-between ingredientDiv my-2">
+                            <div class="mb-1 align-items-center">
+                                <label for="">Name: </label>
+                                <input type="text" name="ingredientName" class="form-control" required>
+                            </div>
+                            <div class="align-items-center">
+                                <label for="">quantity: </label>
+                                <input type="text" name="quantity" class="form-control" required>
+                            </div>
+                            <div class="align-items-center">
+                                <label for="units" >unit: </label>
+                                <select class="form-select form-control" name="units" id="units" required>
+                                    <option selected>Select unit</option>
+                                    <option value="tbsp">tbsp</option>
+                                    <option value="grams">grams</option>
+                                    <option value="kilograms">kilograms</option>
+                                    <option value="liter">liter</option>
+                                    <option value="milliliter">milliliter</option>
+                                    <option value="unit">unit</option>
+                                </select>
+                            </div>
                         </div>
                     </div>
                 </div>
 
                 <div class="col-12">
-                    <button type="button" class="btn btn-outline-primary" id="addIngredientBtn">
+                    <button type="button" class="btn btn-outline-primary" id="addIngredientBtn" onclick="addIngredient(event)">
                         + Ingredient
                     </button>
                 </div>
@@ -97,7 +116,7 @@
                     <select class="form-select form-control" name="diet" id="">
                         <option selected>Select Diet</option>
                         <option value="Veg">Veg</option>
-                        <option value="Non Veg">Non Veg</option>
+                        <option value="Non Veg">NonVeg</option>
                     </select>
                 </div>
 

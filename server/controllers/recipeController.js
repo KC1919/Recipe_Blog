@@ -51,7 +51,7 @@ exports.homepage = async (req, res) => {
             }).lean();
 
             //getting the array of liked recipe ids from the object
-            likedRecipesId = likedRecipesId['liked'];
+            likedRecipesId = likedRecipesId !== null ? likedRecipesId['liked'] : null;
 
             //fetching all the recipes with the ids present in the likedRecipesId array
             likedRecipes = await Recipe.find({
@@ -66,7 +66,7 @@ exports.homepage = async (req, res) => {
             }).lean();
 
             //getting the array of saved recipe ids from the object
-            savedRecipesId = savedRecipesId['saved'];
+            savedRecipesId = savedRecipesId !== null ? savedRecipesId['saved'] : null;
 
             //fetching all the recipes with the ids present in the savedRecipesId array
             savedRecipes = await Recipe.find({
@@ -114,6 +114,8 @@ exports.getPublishRecipe = async (req, res) => {
 
 exports.postPublishRecipe = async (req, res) => {
     try {
+
+        console.log(req.body);
         let imageUploadFile;
         let imageUploadPath;
         let newImageName;
@@ -146,16 +148,40 @@ exports.postPublishRecipe = async (req, res) => {
             publisher = user.name;
         }
 
-        // console.log(publisher);
-        console.log(user);
+        let ingredientNames = req.body.ingredientName;
+        let ingredientQuantities = req.body.quantity;
+        let ingredientUnits = req.body.units;
 
-        //creating and saving the recipe in the database
+        let ingredientsArr = [];
+
+        console.log(typeof req.body.ingredientName);
+        if (typeof req.body.ingredientName == 'object') {
+            for (let i = 0; i < ingredientNames.length; i++) {
+                let ingredientData = {
+                    'name': ingredientNames[i],
+                    'quantity': ingredientQuantities[i],
+                    'unit': ingredientUnits[i]
+                }
+
+                ingredientsArr.push(ingredientData);
+            }
+        } else {
+            ingredientsArr.push({
+                'name': ingredientNames,
+                'quantity': ingredientQuantities,
+                'unit': ingredientUnits
+            })
+        }
+        // console.log(publisher);
+        // console.log(user);
+
+        // creating and saving the recipe in the database
         const newRecipe = {
             'author': req.user,
             'publisher': publisher,
             'name': req.body.name,
             'image': newImageName,
-            'ingredients': req.body.ingredients,
+            'ingredients': ingredientsArr,
             'steps': req.body.steps,
             'category': req.body.category,
             'type': req.body.type,
@@ -204,8 +230,8 @@ exports.exploreCategory = async (req, res) => {
             'category': req.params.id
         });
         if (recipes !== null) {
-            res.render('categories', {
-                'title': 'Recipi Blog - Recipi',
+            res.render('recipes', {
+                'title': 'Recipe Blog - Recipe',
                 'recipes': recipes
             });
         }
@@ -360,29 +386,48 @@ exports.incrementLikes = async (req, res) => {
         // console.log(req.body.recipeId);
         let recipeId = req.body.recipeId;
 
-        const updateLike = await Recipe.findByIdAndUpdate(recipeId, {
-            $inc: {
-                "likes": 1
-            }
-        })
-        let updateUserLikedRecipes = null;
-
-        // console.log(req.user);
-        console.log(recipeId);
-
         recipeId = mongoose.Types.ObjectId(recipeId);
-        updateUserLikedRecipes = await User.findByIdAndUpdate(req.user, {
-            $push: {
-                liked: recipeId
-            }
+
+        const userLikedRecipe = await User.findById(req.user, {
+            'liked': {
+                $elemMatch: {
+                    $eq: recipeId
+                }
+            },
+            '_id': 0
         });
+        
+        if (userLikedRecipe.liked.length == 0) {
+            const updateLike = await Recipe.findByIdAndUpdate(recipeId, {
+                $inc: {
+                    "likes": 1
+                }
+            })
+            let updateUserLikedRecipes = null;
 
-        // console.log(updateLike);
-        // console.log(updateUserLikedRecipes);
+            // console.log(req.user);
+            console.log(recipeId);
 
-        if (typeof updateLike !== 'undefined' && typeof updateUserLikedRecipes !== 'undefined') {
+            updateUserLikedRecipes = await User.findByIdAndUpdate(req.user, {
+                $push: {
+                    liked: recipeId
+                }
+            });
+
+            // console.log(updateLike);
+            // console.log(updateUserLikedRecipes);
+
+            if (typeof updateLike !== 'undefined' && typeof updateUserLikedRecipes !== 'undefined') {
+                console.log("Recipe added to the liked list of the user successfully");
+                res.status(200).json({
+                    message: "Likes updated successfully",
+                    status: 'success'
+                });
+            }
+        } else {
+            console.log("Recipe already in the liked list");
             res.status(200).json({
-                message: "Likes updated successfully",
+                message: "Recipe already in the liked list",
                 status: 'success'
             });
         }

@@ -12,7 +12,7 @@
     <%if(typeof savedRecipes!='undefined' && savedRecipes.length>0){%>
         <%savedRecipes.forEach((recipe,index)=>{%>
             <div class="card mx-1" style="width: 12rem; height:12rem">
-                <div class="align-items-center mb-2" style="text-align: right;">
+                <div class="icon-save align-items-center mb-2" style="text-align: right;">
                     <i class="bi bi-bookmarks-fill" data-id="<%=recipe._id%>" onclick="handleSaveClick(event)"></i>
                 </div>
                 <a href="/recipe/<%=recipe._id%>" class="cols text-center category__link">
@@ -24,8 +24,8 @@
                     </div>
                 </a>
                 <div class="information d-flex justify-content-sm-between">
-                    <div class="heart-icon-div mb-0">
-                        <i class="bi bi-heart-fill" data-id="<%=recipe._id%>" onclick="handleLikeClick(event)">
+                    <div class="icon-heart heart-icon-div mb-0">
+                        <i class="bi bi-heart" data-id="<%=recipe._id%>" onclick="handleLikeClick(event)">
                             <p class="heart-icon-text" ><%=recipe.likes%></p>
                         </i>
                     </div>
