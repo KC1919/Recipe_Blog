@@ -396,7 +396,7 @@ exports.incrementLikes = async (req, res) => {
             },
             '_id': 0
         });
-        
+
         if (userLikedRecipe.liked.length == 0) {
             const updateLike = await Recipe.findByIdAndUpdate(recipeId, {
                 $inc: {
@@ -557,3 +557,21 @@ exports.unsaveRecipe = async (req, res) => {
         });
     }
 }
+
+// exports.getEditRecipe = async (req, res) => {
+//     try {
+//         let recipeId = req.params.id;
+//         // console.log(+recipeId);
+//         const recipe = await Recipe.findById(recipeId);
+//         console.log(recipe);
+//         res.render('edit-recipe', {
+//             'recipe': recipe
+//         });
+//     } catch (error) {
+//         console.log("Recipe edit failed,server error", error);
+//         res.status(500).json({
+//             message: "Recipe edit failed,server error",
+//             status: "failure"
+//         });
+//     }
+// }

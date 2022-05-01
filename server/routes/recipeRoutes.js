@@ -17,8 +17,9 @@ router.get('/my-recipes/', verifyUser, recipeController.myRecipes);
 router.get('/saved-recipes/', verifyUser, recipeController.savedRecipes);
 router.post('/increment-likes', verifyUser, recipeController.incrementLikes);
 router.post('/decrement-likes', verifyUser, recipeController.decrementLikes);
-router.post('/save-recipe',verifyUser, recipeController.saveRecipe);
+router.post('/save-recipe', verifyUser, recipeController.saveRecipe);
 router.post('/unsave-recipe', verifyUser, recipeController.unsaveRecipe);
+// router.get('/edit-recipe/:id', verifyUser, recipeController.getEditRecipe);
 
 
 module.exports = router;

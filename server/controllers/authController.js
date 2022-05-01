@@ -130,6 +130,24 @@ exports.updateProfile = async (req, res) => {
             let profileImageName = Date.now() + " " + profileImageFile.name;
             let profileImagePath = path.resolve('./') + '/public/uploads/' + profileImageName;
 
+            let userImage = await User.findById(req.user, {
+                'image': 1
+            });
+            console.log(userImage);
+            if (userImage.image.length !== 0) {
+                const fs = require('fs')
+
+                const path = './public/uploads/' + userImage.image
+
+                fs.unlink(path, (err) => {
+                    if (err) {
+                        console.error(err)
+                        return
+                    }
+
+                    //file removed
+                })
+            }
             await User.findByIdAndUpdate(req.user, {
                 'image': profileImageName
             })
@@ -141,7 +159,7 @@ exports.updateProfile = async (req, res) => {
             });
         }
 
-        // const hash = await bcrypt.hash(password, 10);
+        // // const hash = await bcrypt.hash(password, 10);
 
         const updateProfile = await User.findByIdAndUpdate(req.user, {
             'name': name,

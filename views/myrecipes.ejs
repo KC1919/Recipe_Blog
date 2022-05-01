@@ -12,8 +12,8 @@
     <%if(typeof myRecipes!='undefined' && myRecipes.length>0){%>
         <%myRecipes.forEach((recipe,index)=>{%>
             <div class="card mx-1" style="width: 12rem; height: 12rem;">
-                <div class="align-items-center mb-2" style="text-align: right;">
-                    <i class="icon-save bi bi-bookmarks" data-id="<%=recipe._id%>" onclick="handleSaveClick(event)"></i>
+                <div class="icon-save align-items-center mb-2" style="text-align: right;">
+                    <i class="bi bi-bookmarks" data-id="<%=recipe._id%>" onclick="handleSaveClick(event)"></i>
                 </div>
                 <a href="/recipe/<%=recipe._id%>" class="cols text-center category__link">
                     <div class="category__img shadow">
