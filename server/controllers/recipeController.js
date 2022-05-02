@@ -6,7 +6,7 @@ const jwt = require('jsonwebtoken');
 // const ObjectId = require('mongodb').ObjectId;
 const mongoose = require('mongoose');
 
-//get homepage
+//fetching and rendering the homepage
 exports.homepage = async (req, res) => {
 
     try {
@@ -28,6 +28,7 @@ exports.homepage = async (req, res) => {
         let likedRecipes = null;
         let savedRecipes = null
 
+        //if the user is logged in
         if (typeof req.cookies['secret'] !== 'undefined') {
 
             const token = req.cookies['secret'];
@@ -60,6 +61,7 @@ exports.homepage = async (req, res) => {
                 }
             });
 
+            //getting the array of saved recipe ids from the object
             let savedRecipesId = await User.findById(req.user, {
                 saved: 1,
                 _id: 0
@@ -76,6 +78,7 @@ exports.homepage = async (req, res) => {
             });
         }
 
+        //rendering the homepage, the user information
         res.render('index', {
             'title': 'Recipe Blogs - Home',
             'categories': categories,
@@ -108,14 +111,15 @@ exports.categories = async (req, res) => {
     }
 }
 
+//rendering the recipe publish form
 exports.getPublishRecipe = async (req, res) => {
     res.render('publish');
 }
 
+//function to process the publish recipe request
 exports.postPublishRecipe = async (req, res) => {
     try {
 
-        console.log(req.body);
         let imageUploadFile;
         let imageUploadPath;
         let newImageName;
@@ -140,40 +144,54 @@ exports.postPublishRecipe = async (req, res) => {
             }
         });
 
+        //getting the user info of the logged in user
         const user = await User.findById(req.user);
 
         let publisher = '';
 
+        //setting the publisher to the user's name
         if (user !== null) {
             publisher = user.name;
         }
 
+        //getting the list of ingredients name
         let ingredientNames = req.body.ingredientName;
+
+        //getting the list of ingredients quantity
         let ingredientQuantities = req.body.quantity;
+
+        //getting the list of ingredients quantity units
         let ingredientUnits = req.body.units;
 
+        //array to store the object of all the ingredients info
         let ingredientsArr = [];
 
-        console.log(typeof req.body.ingredientName);
+        // console.log(typeof req.body.ingredientName);
+
+        //if the ingredientName is of object type. that means there are more than 1 ingredients
         if (typeof req.body.ingredientName == 'object') {
+
+            //we loop through the names, wuantity and units array of the ingredients
             for (let i = 0; i < ingredientNames.length; i++) {
+
+                //make an object for each ingredient, consisting of the name, wuantity and unit 
+                // of the quantity of the ingredient
                 let ingredientData = {
                     'name': ingredientNames[i],
                     'quantity': ingredientQuantities[i],
                     'unit': ingredientUnits[i]
                 }
 
+                //adding ingredient object ingredients array
                 ingredientsArr.push(ingredientData);
             }
-        } else {
+        } else { //if there is only 1 ingredient
             ingredientsArr.push({
                 'name': ingredientNames,
                 'quantity': ingredientQuantities,
                 'unit': ingredientUnits
             })
         }
-        // console.log(publisher);
-        // console.log(user);
 
         // creating and saving the recipe in the database
         const newRecipe = {
@@ -208,11 +226,15 @@ exports.postPublishRecipe = async (req, res) => {
     }
 }
 
+//function to render the details of a recipe
 exports.exploreRecipe = async (req, res) => {
     try {
-        console.log(req.params.id);
+
+        //getting the details of the recipe by recipe id
         const recipe = await Recipe.findById(req.params.id);
         if (recipe !== null) {
+
+            //rendering the recipe details page with all the details of the recipe
             res.render('recipe', {
                 'title': 'Recipe Blog - Recipe',
                 'recipe': recipe
@@ -225,10 +247,13 @@ exports.exploreRecipe = async (req, res) => {
 
 exports.exploreCategory = async (req, res) => {
     try {
-        console.log(req.params.id);
+
+        //getting all the recipes of a particular category
         const recipes = await Recipe.find({
             'category': req.params.id
         });
+
+        //rendering all the recipes for the queried category
         if (recipes !== null) {
             res.render('recipes', {
                 'title': 'Recipe Blog - Recipe',
@@ -240,16 +265,21 @@ exports.exploreCategory = async (req, res) => {
     }
 }
 
+//function to process search query
 exports.searchRecipe = async (req, res) => {
     try {
+        //getting the search term
         const searchTerm = req.body.searchTerm;
 
+        //fetching all the recipes , if it contains  the search term
         const recipes = await Recipe.find({
             $text: {
                 $search: searchTerm,
                 $diacriticSensitive: true
             }
-        })
+        });
+
+        //rendering all the recipes found with the searched term, to the user
         res.render('search', {
             title: 'Food Blog - Search',
             'recipes': recipes
@@ -259,8 +289,11 @@ exports.searchRecipe = async (req, res) => {
     }
 }
 
+//getting the 20 latest recipes
 exports.latestRecipes = async (req, res) => {
     try {
+        //getting the top 20 recipes sorted in descending order of their id, means the recipes that 
+        // was posted last would be the latest
         const recipes = await Recipe.find({}).sort({
             '_id': -1
         }).limit(20);
@@ -277,8 +310,12 @@ exports.latestRecipes = async (req, res) => {
     }
 }
 
+//function to render 20 popular recipes
 exports.popularRecipes = async (req, res) => {
     try {
+
+        //getting the top 20 recipes sorted in descending order of their likes, means the recipes that 
+        // has maximum likes would be at the top
         const recipes = await Recipe.find({}).sort({
             'likes': -1
         }).limit(20);
@@ -327,17 +364,18 @@ exports.likedRecipes = async (req, res) => {
 
 exports.myRecipes = async (req, res) => {
     try {
+
+        //fetching all the recipes posted by the user from the database
         const recipes = await Recipe.find({
             'author': req.user
-        }).sort({
-            _id: -1
-        }).lean();
+        });
 
+        //if there are any recipes we send them to the frontend
         if (recipes !== null && recipes.length > 0) {
             res.render('myrecipes', {
                 'myRecipes': recipes
             });
-        } else {
+        } else { //else we send an empty array
             res.render('myrecipes', {
                 'myRecipes': []
             });
@@ -383,11 +421,14 @@ exports.savedRecipes = async (req, res) => {
 
 exports.incrementLikes = async (req, res) => {
     try {
-        // console.log(req.body.recipeId);
+
+        //getting the recipe id whose likes is to be incremented
         let recipeId = req.body.recipeId;
 
+        //converting the recipe id from string to ObjectId
         recipeId = mongoose.Types.ObjectId(recipeId);
 
+        //checking if the recipe already exists in the list of user's liked recipes
         const userLikedRecipe = await User.findById(req.user, {
             'liked': {
                 $elemMatch: {
@@ -397,7 +438,10 @@ exports.incrementLikes = async (req, res) => {
             '_id': 0
         });
 
+        //if the recipe does not exists in the user's list of liked recipes
         if (userLikedRecipe.liked.length == 0) {
+
+            //then we increment the likes on the recipe by 1
             const updateLike = await Recipe.findByIdAndUpdate(recipeId, {
                 $inc: {
                     "likes": 1
@@ -405,17 +449,12 @@ exports.incrementLikes = async (req, res) => {
             })
             let updateUserLikedRecipes = null;
 
-            // console.log(req.user);
-            console.log(recipeId);
-
+            //and add the recipe to the list of user's liked recipes
             updateUserLikedRecipes = await User.findByIdAndUpdate(req.user, {
                 $push: {
                     liked: recipeId
                 }
             });
-
-            // console.log(updateLike);
-            // console.log(updateUserLikedRecipes);
 
             if (typeof updateLike !== 'undefined' && typeof updateUserLikedRecipes !== 'undefined') {
                 console.log("Recipe added to the liked list of the user successfully");
@@ -445,6 +484,7 @@ exports.decrementLikes = async (req, res) => {
     try {
         let recipeId = req.body.recipeId;
 
+        //decrementing the likes on the recipe by 1 
         const updateLike = await Recipe.findByIdAndUpdate(recipeId, {
             $inc: {
                 "likes": -1
@@ -452,9 +492,9 @@ exports.decrementLikes = async (req, res) => {
         })
         let updateUserLikedRecipes = null;
 
-        console.log(recipeId);
-
         recipeId = mongoose.Types.ObjectId(recipeId);
+
+        //removeingg the recipe from the user's list of saved recipes
         updateUserLikedRecipes = await User.findByIdAndUpdate(req.user, {
             $pull: {
                 liked: recipeId
@@ -480,16 +520,14 @@ exports.decrementLikes = async (req, res) => {
     }
 }
 
+//function to handle save request
 exports.saveRecipe = async (req, res) => {
     try {
         let recipeId = req.body.recipeId;
 
-        console.log(recipeId);
-
         let recipeObjectId = mongoose.Types.ObjectId(recipeId);
 
-        console.log(recipeObjectId);
-
+        //checking if the recipe is already present in the list of user's saved recipes
         const findRecipe = await User.findById(req.user, {
             'saved': {
                 $elemMatch: {
@@ -499,9 +537,10 @@ exports.saveRecipe = async (req, res) => {
             '_id': 0
         });
 
-        // console.log(findRecipe.saved.length);
-
+        //if the recipe is not present in the list of user's saved recipes
         if (findRecipe.saved.length === 0) {
+
+            //then we add the recipe in the user's list of sved recipes
             const addRecipeUser = await User.findByIdAndUpdate(req.user, {
                 $push: {
                     saved: recipeObjectId
@@ -530,11 +569,14 @@ exports.saveRecipe = async (req, res) => {
     }
 }
 
+//function to handle unsave request
 exports.unsaveRecipe = async (req, res) => {
     try {
         let recipeId = req.body.recipeId;
 
         let recipeObjectId = mongoose.Types.ObjectId(recipeId);
+
+        //removing the recipe from the user's list of saved recipes
         const removeRecipeUser = await User.findByIdAndUpdate(req.user, {
             $pull: {
                 saved: recipeObjectId
